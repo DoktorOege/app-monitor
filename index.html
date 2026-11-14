@@ -124,6 +124,10 @@ function render(s) {
       <div><i style="background:var(--crit)"></i>Rot: voll oder kaputt – du bekommst eine Push-Meldung</div>
     </div>
     <section class="card history" style="flex-direction:column"><b style="font-size:15px">Letzte Meldungen</b>${hist || '<span class="todo">Noch keine.</span>'}</section>
+    <a class="card" href="https://claude.ai/settings/usage" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;flex-direction:row;align-items:center;justify-content:space-between">
+      <span style="display:flex;flex-direction:column;gap:2px"><b style="font-size:16px">Claude-Verbrauch</b><span class="hint">5-Stunden- und Wochenlimit – öffnet deine Claude-Einstellungen</span></span>
+      <span aria-hidden="true" style="font-size:22px;color:var(--accent)">›</span>
+    </a>
     <button class="link" id="toggle" aria-expanded="${document.body.classList.contains('show-details')}">${document.body.classList.contains('show-details') ? 'Meldungen ausblenden' : 'Letzte Meldungen anzeigen'}</button>
   </div>`;
   document.getElementById('toggle').onclick = () => { document.body.classList.toggle('show-details'); render(s); };
