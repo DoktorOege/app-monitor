@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-14T16:25:44.136Z",
+ "checkedAt": "2026-11-14T16:36:01.750Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -50,10 +50,10 @@
    ],
    "facts": [],
    "notes": [],
-   "dataText": "Läuft. Daten aktualisiert heute um 07:42 Uhr.",
+   "dataText": "Läuft. Daten aktualisiert heute um 17:40 Uhr.",
    "level": "ok",
    "label": "Alles gut",
-   "text": "Läuft. Daten aktualisiert heute um 07:42 Uhr.",
+   "text": "Läuft. Daten aktualisiert heute um 17:40 Uhr.",
    "todo": ""
   },
   {
