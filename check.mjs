@@ -4,7 +4,7 @@
 // Geheime Schlüssel kommen aus den GitHub-Secrets, nie aus dieser Datei:
 //   NTFY_TOPIC      Name des Push-Kanals in der ntfy-App
 //   CF_API_TOKEN    Cloudflare-Token mit "Account Analytics: Read"
-//   CF_ACCOUNT_ID   Cloudflare-Konto-ID
+//   CF_ACCOUNT_ID   (optional) Cloudflare-Konto-ID, sonst die eingetragene
 //   GCP_SA_KEY      Google-Dienstkonto (JSON) mit Rolle "Monitoring-Betrachter"
 //   GITHUB_TOKEN    kommt automatisch aus GitHub Actions
 
@@ -24,6 +24,7 @@ const LIMITS = {
   ghSiteMB: 1024       // GitHub Pages, Größe der Seite
 };
 const env = process.env;
+const CF_ACCOUNT_ID = (env.CF_ACCOUNT_ID || '1ca86790493de4518fd1b1c410173613').trim(); // Konto-ID ist kein Geheimnis
 const now = new Date();
 
 // ---------- Hilfen ----------
@@ -61,7 +62,7 @@ function bar(provider, label, used, limit, opts = {}) {
 
 // ---------- Cloudflare (einmal pro Lauf, für alle Apps) ----------
 async function cloudflare() {
-  if (!env.CF_API_TOKEN || !env.CF_ACCOUNT_ID) return null;
+  if (!env.CF_API_TOKEN) return null;
   const since = startOfDay('UTC').toISOString();
   const query = `query($acc:String!,$since:Time!,$until:Time!){viewer{accounts(filter:{accountTag:$acc}){
     workers:workersInvocationsAdaptive(limit:10000,filter:{datetime_geq:$since,datetime_leq:$until}){sum{requests} dimensions{scriptName}}
@@ -70,7 +71,7 @@ async function cloudflare() {
   const r = await get('https://api.cloudflare.com/client/v4/graphql', {
     method: 'POST',
     headers: { authorization: `Bearer ${env.CF_API_TOKEN.trim()}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ query, variables: { acc: env.CF_ACCOUNT_ID.trim(), since, until: now.toISOString() } })
+    body: JSON.stringify({ query, variables: { acc: CF_ACCOUNT_ID, since, until: now.toISOString() } })
   });
   const j = await r.json();
   const acc = j.data?.viewer?.accounts?.[0];
