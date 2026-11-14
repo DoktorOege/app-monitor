@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-14T17:12:56.794Z",
+ "checkedAt": "2026-11-14T17:22:24.235Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 9,
+     "used": 10,
      "limit": 100000,
-     "text": "9 / 100.000",
+     "text": "10 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 9 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 10 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -35,6 +35,8 @@
     }
    ],
    "notes": [],
+   "updated": "2026-11-14T01:16:00.000Z",
+   "updatedText": "heute, 02:16 Uhr",
    "level": "ok",
    "label": "Alles gut",
    "text": "Läuft. Weit weg von jeder Grenze.",
@@ -60,7 +62,9 @@
    ],
    "facts": [],
    "notes": [],
+   "updated": "2026-11-14T16:29:15.000Z",
    "dataText": "Läuft. Daten aktualisiert heute um 17:40 Uhr.",
+   "updatedText": "heute, 17:29 Uhr",
    "level": "ok",
    "label": "Alles gut",
    "text": "Läuft. Daten aktualisiert heute um 17:40 Uhr.",
@@ -86,6 +90,8 @@
    ],
    "facts": [],
    "notes": [],
+   "updated": "2026-11-13T22:36:09.000Z",
+   "updatedText": "gestern, 23:36 Uhr",
    "level": "ok",
    "label": "Alles gut",
    "text": "Läuft. Weit weg von jeder Grenze.",
