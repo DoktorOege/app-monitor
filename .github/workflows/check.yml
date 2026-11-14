@@ -1,0 +1,59 @@
+name: Apps prüfen
+
+on:
+  schedule:
+    - cron: '17 * * * *'   # jede Stunde (Minute 17)
+  workflow_dispatch:
+    inputs:
+      test_push:
+        description: 'Test-Meldung aufs Handy schicken'
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths-ignore: ['status.json']
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Apps prüfen
+        run: node check.mjs
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+          TEST_PUSH: ${{ inputs.test_push }}
+
+      - name: Ergebnis speichern
+        run: |
+          git config user.name "App-Monitor"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add status.json
+          git diff --cached --quiet || git commit -m "Status $(date -u +%Y-%m-%dT%H:%MZ)" && git push || true
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deploy
+        uses: actions/deploy-pages@v4
