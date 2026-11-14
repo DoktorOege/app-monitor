@@ -92,7 +92,7 @@ function render(s) {
   const cards = apps.map(app => {
     const groups = (app.providers || []).map(p => {
       const bars = (app.bars || []).filter(b => b.provider === p).map(barHtml).join('');
-      const facts = (app.facts || []).filter(f => f.provider === p).map(f => `<div class="hint">${esc(f.text)}</div>`).join('');
+      const facts = (app.facts || []).filter(f => f.provider === p).map(f => `<div class="hint">${esc(f.text)}${f.link ? ` <a href="${esc(f.link)}" target="_blank" rel="noopener">${esc(f.linkText || 'Öffnen')}</a>` : ''}</div>`).join('');
       return `<div class="provider"><div class="pname">${esc(p)}</div>${bars}${facts}</div>`;
     }).join('');
     const notes = (app.notes || []).map(n => `<div class="hint" style="color:var(--crit-t)">Fehler: ${esc(n)}</div>`).join('');

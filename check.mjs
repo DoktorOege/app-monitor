@@ -174,7 +174,11 @@ async function checkApp(cfg, cf) {
         app.bars.push(bar('Firebase', 'Daten gespeichert heute', fs.writes, LIMITS.fsWrites, { reset }));
         app.bars.push(bar('Firebase', 'Daten gelöscht heute', fs.deletes, LIMITS.fsDeletes, { reset }));
       } else app.facts.push({ provider: 'Firebase', text: 'Noch kein Schlüssel eingetragen.' });
-    } catch (e) { note(e); app.facts.push({ provider: 'Firebase', text: 'Verbrauch gerade nicht abrufbar.' }); }
+    } catch (e) {
+      const usage = `https://console.firebase.google.com/project/${cfg.firebase.project}/firestore/usage`;
+      if (/billing/i.test(String(e.message))) app.facts.push({ provider: 'Firebase', text: 'Im Gratis-Tarif gibt Google den Verbrauch nicht automatisch heraus. Du kannst ihn in der Firebase-Konsole ansehen.', link: usage, linkText: 'Verbrauch in Firebase ansehen' });
+      else { note(e); app.facts.push({ provider: 'Firebase', text: 'Verbrauch gerade nicht abrufbar.', link: usage, linkText: 'In Firebase ansehen' }); }
+    }
   }
 
   if (cfg.github) {
