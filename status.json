@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-14T17:48:00.097Z",
+ "checkedAt": "2026-11-14T18:50:57.522Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 16,
+     "used": 19,
      "limit": 100000,
-     "text": "16 / 100.000",
+     "text": "19 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 16 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 19 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,13 +39,13 @@
     }
    ],
    "notes": [],
-   "ms": 609,
+   "ms": 573,
    "uptime": 100,
    "usualMs": 372,
    "visits": {
-    "lastVisit": "2026-11-14T17:44:00.000Z",
-    "today": 2,
-    "week": 2
+    "lastVisit": "2026-11-14T18:33:00.000Z",
+    "today": 5,
+    "week": 5
    },
    "cfErrors": 0,
    "updated": "2026-11-14T01:16:00.000Z",
@@ -66,22 +66,22 @@
     {
      "provider": "GitHub",
      "label": "Speicherplatz der Seite",
-     "used": 0.7265625,
+     "used": 0.7705078125,
      "limit": 1024,
-     "text": "0,7 / 1.024 MB",
+     "text": "0,8 / 1.024 MB",
      "pct": 0,
      "level": "ok"
     }
    ],
    "facts": [],
    "notes": [],
-   "ms": 64,
+   "ms": 286,
    "uptime": 100,
-   "usualMs": 140,
+   "usualMs": 135,
    "visits": {
-    "lastVisit": "2026-11-14T17:36:00.000Z",
-    "today": 3,
-    "week": 3
+    "lastVisit": "2026-11-14T18:44:00.000Z",
+    "today": 17,
+    "week": 17
    },
    "updated": "2026-11-14T17:30:49.000Z",
    "dataText": "Läuft. Daten aktualisiert heute um 17:40 Uhr.",
@@ -102,7 +102,7 @@
     {
      "provider": "GitHub",
      "label": "Speicherplatz der Seite",
-     "used": 0.03515625,
+     "used": 0.0390625,
      "limit": 1024,
      "text": "0,0 / 1.024 MB",
      "pct": 0,
@@ -111,9 +111,9 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 32,
+   "ms": 247,
    "uptime": 100,
-   "usualMs": 107,
+   "usualMs": 47,
    "visits": {
     "lastVisit": null,
     "today": 0,
@@ -133,20 +133,20 @@
   "uptime": {
    "weed": {
     "2026-11-14": [
-     5,
-     5
+     6,
+     6
     ]
    },
    "nba": {
     "2026-11-14": [
-     5,
-     5
+     6,
+     6
     ]
    },
    "container": {
     "2026-11-14": [
-     5,
-     5
+     6,
+     6
     ]
    }
   },
@@ -156,21 +156,24 @@
     341,
     258,
     507,
-    609
+    609,
+    573
    ],
    "nba": [
     140,
     281,
     135,
     80,
-    64
+    64,
+    286
    ],
    "container": [
     34,
     245,
     107,
     47,
-    32
+    32,
+    247
    ]
   },
   "slow": {
