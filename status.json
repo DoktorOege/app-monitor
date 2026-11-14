@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-14T17:11:04.489Z",
+ "checkedAt": "2026-11-14T17:12:56.794Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,24 +17,24 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 8,
+     "used": 9,
      "limit": 100000,
-     "text": "8 / 100.000",
+     "text": "9 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 8 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 9 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
    "facts": [
     {
      "provider": "Firebase",
-     "text": "Verbrauch gerade nicht abrufbar."
+     "text": "Im Gratis-Tarif gibt Google den Verbrauch nicht automatisch heraus. Du kannst ihn in der Firebase-Konsole ansehen.",
+     "link": "https://console.firebase.google.com/project/weed-online-kma/firestore/usage",
+     "linkText": "Verbrauch in Firebase ansehen"
     }
    ],
-   "notes": [
-    "Google: This API method requires billing to be enabled. Please enable billing on project #907669454524 by visiting https://console.developers.google.com/billing/enable?project=907669454524 then retry. If you enabled billing for this project recently, wait a few minutes for the action to propagate to our systems and retry."
-   ],
+   "notes": [],
    "level": "ok",
    "label": "Alles gut",
    "text": "Läuft. Weit weg von jeder Grenze.",
