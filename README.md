@@ -5,7 +5,8 @@ Zeigt auf einen Blick, ob Michaels Apps laufen und ob ein Gratis-Kontingent knap
 **App:** https://doktoroege.github.io/app-monitor/
 
 - Prüft jede Stunde automatisch (GitHub Actions, `check.mjs`) und schreibt das Ergebnis in `status.json`.
-- Geprüft werden: Weed! (Cloudflare-Aufrufe, Firestore-Lese-/Speicher-/Löschzugriffe, Push-Server), NBA Aktuell (Alter der Daten), Container-Scanner (erreichbar).
+- Welche Apps geprüft werden, steht in `apps.json`. Apps ohne `url` gelten als nicht online und werden ausgelassen (z. B. Meppen Basketball, bis sie bei Cloudflare läuft).
+- Pro App wird der Verbrauch je Anbieter angezeigt: Cloudflare (Aufrufe, KV-Speicher), Firebase (Firestore lesen/speichern/löschen), GitHub (Speicherplatz der Seite).
 - Gelb ab 70 %, Rot ab 90 %. Push-Meldungen kommen über die App **ntfy**. Rot sofort, Gelb höchstens einmal am Tag und nicht nachts (22–7 Uhr).
 
 ## Geheime Schlüssel (Settings → Secrets and variables → Actions)

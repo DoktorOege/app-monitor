@@ -1,10 +1,12 @@
 // App-Monitor – prüft jede Stunde Michaels Apps und schreibt status.json.
+// Welche Apps geprüft werden, steht in apps.json (Apps ohne url = nicht online, werden ausgelassen).
 // Läuft in GitHub Actions (Node 20+, keine Zusatzpakete).
 // Geheime Schlüssel kommen aus den GitHub-Secrets, nie aus dieser Datei:
 //   NTFY_TOPIC      Name des Push-Kanals in der ntfy-App
 //   CF_API_TOKEN    Cloudflare-Token mit "Account Analytics: Read"
 //   CF_ACCOUNT_ID   Cloudflare-Konto-ID
 //   GCP_SA_KEY      Google-Dienstkonto (JSON) mit Rolle "Monitoring-Betrachter"
+//   GITHUB_TOKEN    kommt automatisch aus GitHub Actions
 
 import { readFile, writeFile } from 'node:fs/promises';
 import { createSign } from 'node:crypto';
@@ -12,60 +14,80 @@ import { createSign } from 'node:crypto';
 const MONITOR_URL = 'https://doktoroege.github.io/app-monitor/';
 const WARN = 70, CRIT = 90;               // Prozent
 const QUIET_FROM = 22, QUIET_TO = 7;      // nachts nur Rot
+const LIMITS = {
+  cfRequests: 100000,  // Cloudflare Workers, pro Tag, ganzes Konto
+  kvReads: 100000,     // Cloudflare KV, pro Tag
+  kvWrites: 1000,      // Cloudflare KV, pro Tag
+  fsReads: 50000,      // Firestore, pro Tag
+  fsWrites: 20000,
+  fsDeletes: 20000,
+  ghSiteMB: 1024       // GitHub Pages, Größe der Seite
+};
 const env = process.env;
 const now = new Date();
 
 // ---------- Hilfen ----------
 const fmt = n => Math.round(n).toLocaleString('de-DE');
-const pct = (used, limit) => limit ? Math.min(999, (used / limit) * 100) : 0;
+const pct = (used, limit) => (limit ? Math.min(999, (used / limit) * 100) : 0);
 const levelOf = p => (p >= CRIT ? 'crit' : p >= WARN ? 'warn' : 'ok');
 const RANK = { off: 0, ok: 1, warn: 2, crit: 3 };
-const worst = list => list.reduce((a, b) => (RANK[b] > RANK[a] ? b : a), 'ok');
 
 function partsIn(tz, d = now) {
   const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: tz, hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).formatToParts(d).map(x => [x.type, x.value]));
   return { y: +p.year, m: +p.month, d: +p.day, h: +p.hour, min: +p.minute, s: +p.second };
 }
-// Mitternacht von heute in einer Zeitzone, als Date
-function startOfDay(tz) {
+function startOfDay(tz) { // Mitternacht von heute in einer Zeitzone
   const p = partsIn(tz);
   const offset = Date.UTC(p.y, p.m - 1, p.d, p.h, p.min, p.s) - Math.floor(now.getTime() / 1000) * 1000;
   return new Date(Date.UTC(p.y, p.m - 1, p.d) - offset);
 }
 const berlinTime = d => d.toLocaleTimeString('de-DE', { timeZone: 'Europe/Berlin', hour: '2-digit', minute: '2-digit' });
 const berlinDay = (d = now) => { const p = partsIn('Europe/Berlin', d); return `${p.y}-${String(p.m).padStart(2, '0')}-${String(p.d).padStart(2, '0')}`; };
-const nextReset = tz => new Date(startOfDay(tz).getTime() + 24 * 3600 * 1000);
-const resetText = tz => `Startet um ${berlinTime(nextReset(tz)).replace(/^0/, '')} Uhr neu.`;
+const resetText = tz => `Startet um ${berlinTime(new Date(startOfDay(tz).getTime() + 864e5)).replace(/^0/, '')} Uhr neu.`;
 
 async function get(url, opts = {}, tries = 2) {
   for (let i = 0; i < tries; i++) {
-    try {
-      const r = await fetch(url, { ...opts, signal: AbortSignal.timeout(15000) });
-      return r;
-    } catch (e) { if (i === tries - 1) throw e; await new Promise(r => setTimeout(r, 3000)); }
+    try { return await fetch(url, { ...opts, signal: AbortSignal.timeout(15000) }); }
+    catch (e) { if (i === tries - 1) throw e; await new Promise(r => setTimeout(r, 3000)); }
   }
 }
 async function reachable(url) {
-  try { const r = await get(url, { headers: { 'cache-control': 'no-cache' } }); return r.ok; } catch { return false; }
+  try { return (await get(url, { headers: { 'cache-control': 'no-cache' } })).ok; } catch { return false; }
+}
+function bar(provider, label, used, limit, opts = {}) {
+  const p = pct(used, limit);
+  return { provider, label, used, limit, text: `${fmt(used)} / ${fmt(limit)}${opts.unit || ''}`, pct: Math.round(p), level: levelOf(p), ...opts };
 }
 
-// ---------- Cloudflare: Aufrufe heute (ganzes Konto) ----------
-async function cloudflareRequests() {
+// ---------- Cloudflare (einmal pro Lauf, für alle Apps) ----------
+async function cloudflare() {
   if (!env.CF_API_TOKEN || !env.CF_ACCOUNT_ID) return null;
   const since = startOfDay('UTC').toISOString();
-  const query = `query($acc:String!,$since:Time!,$until:Time!){viewer{accounts(filter:{accountTag:$acc}){workersInvocationsAdaptive(limit:10000,filter:{datetime_geq:$since,datetime_leq:$until}){sum{requests}}}}}`;
+  const query = `query($acc:String!,$since:Time!,$until:Time!){viewer{accounts(filter:{accountTag:$acc}){
+    workers:workersInvocationsAdaptive(limit:10000,filter:{datetime_geq:$since,datetime_leq:$until}){sum{requests} dimensions{scriptName}}
+    kv:kvOperationsAdaptiveGroups(limit:10000,filter:{datetime_geq:$since,datetime_leq:$until}){sum{requests} dimensions{actionType}}
+  }}}`;
   const r = await get('https://api.cloudflare.com/client/v4/graphql', {
     method: 'POST',
     headers: { authorization: `Bearer ${env.CF_API_TOKEN.trim()}`, 'content-type': 'application/json' },
     body: JSON.stringify({ query, variables: { acc: env.CF_ACCOUNT_ID.trim(), since, until: now.toISOString() } })
   });
   const j = await r.json();
-  if (j.errors && j.errors.length) throw new Error('Cloudflare: ' + j.errors.map(e => e.message).join('; '));
-  const rows = j.data?.viewer?.accounts?.[0]?.workersInvocationsAdaptive || [];
-  return rows.reduce((n, row) => n + (row.sum?.requests || 0), 0);
+  const acc = j.data?.viewer?.accounts?.[0];
+  if (!acc) throw new Error('Cloudflare: ' + (j.errors || []).map(e => e.message).join('; '));
+  const byScript = {};
+  let total = 0;
+  for (const row of acc.workers || []) { const n = row.sum?.requests || 0; const s = row.dimensions?.scriptName || '?'; total += n; byScript[s] = (byScript[s] || 0) + n; }
+  const kv = { read: 0, write: 0 };
+  for (const row of acc.kv || []) {
+    const t = row.dimensions?.actionType || '';
+    if (t === 'read') kv.read += row.sum?.requests || 0;
+    else if (['write', 'delete', 'list'].includes(t)) kv.write += row.sum?.requests || 0; // zählen alle gegen das 1.000er-Limit
+  }
+  return { total, byScript, kv };
 }
 
-// ---------- Google: Firestore-Zugriffe heute ----------
+// ---------- Google Firestore ----------
 async function googleToken(sa) {
   const b64u = s => Buffer.from(s).toString('base64url');
   const iat = Math.floor(Date.now() / 1000);
@@ -90,96 +112,111 @@ async function metricSum(token, project, types, since) {
     const r = await get(`https://monitoring.googleapis.com/v3/projects/${project}/timeSeries?${q}`, { headers: { authorization: `Bearer ${token}` } });
     const j = await r.json();
     if (j.error) { if (r.status === 400 || r.status === 404) continue; throw new Error('Google: ' + j.error.message); }
-    if (!j.timeSeries) continue; // Metrik ohne Daten -> nächsten Namen probieren
+    if (!j.timeSeries) continue;
     return j.timeSeries.reduce((n, ts) => n + ts.points.reduce((m, p) => m + Number(p.value.int64Value ?? p.value.doubleValue ?? 0), 0), 0);
   }
   return 0;
 }
-async function firestoreUsage() {
+let gToken = null;
+async function firestore(project) {
   if (!env.GCP_SA_KEY) return null;
   const sa = JSON.parse(env.GCP_SA_KEY);
-  const token = await googleToken(sa);
-  const since = startOfDay('America/Los_Angeles'); // Firestore-Gratislimits starten um Mitternacht Pazifikzeit neu
-  const project = sa.project_id;
+  gToken ||= await googleToken(sa);
+  const since = startOfDay('America/Los_Angeles'); // Firestore-Limits starten um Mitternacht Pazifikzeit neu
+  const p = project || sa.project_id;
   const [reads, writes, deletes] = await Promise.all([
-    metricSum(token, project, ['document/read_ops_count', 'document/read_count'], since),
-    metricSum(token, project, ['document/write_ops_count', 'document/write_count'], since),
-    metricSum(token, project, ['document/delete_ops_count', 'document/delete_count'], since)
+    metricSum(gToken, p, ['document/read_ops_count', 'document/read_count'], since),
+    metricSum(gToken, p, ['document/write_ops_count', 'document/write_count'], since),
+    metricSum(gToken, p, ['document/delete_ops_count', 'document/delete_count'], since)
   ]);
   return { reads, writes, deletes };
 }
 
-// ---------- Die einzelnen Apps ----------
-function bar(label, used, limit, unit = '') {
-  const p = pct(used, limit);
-  return { label, used, limit, text: `${fmt(used)} / ${fmt(limit)}${unit}`, pct: Math.round(p), level: levelOf(p) };
+// ---------- GitHub ----------
+async function githubRepo(repo) {
+  const headers = { accept: 'application/vnd.github+json', 'user-agent': 'app-monitor' };
+  if (env.GITHUB_TOKEN) headers.authorization = `Bearer ${env.GITHUB_TOKEN}`;
+  const r = await get(`https://api.github.com/repos/${repo}`, { headers });
+  if (!r.ok) throw new Error(`GitHub ${repo}: ${r.status}`);
+  return (await r.json()).size / 1024; // KB -> MB
 }
 
-async function checkWeed() {
-  const app = { id: 'weed', name: 'Weed!', bars: [], notes: [] };
-  const base = 'https://weed-kma.kma-online.workers.dev';
-  const up = await reachable(base + '/');
-  let pushOk = false;
-  try { const r = await get(base + '/api/push'); pushOk = r.ok && (await r.json()).ok === true; } catch { /* bleibt false */ }
+// ---------- Eine App prüfen ----------
+async function checkApp(cfg, cf) {
+  const app = { id: cfg.id, name: cfg.name, url: cfg.url, providers: [], bars: [], facts: [], notes: [], problems: [] };
+  const note = e => app.notes.push(String(e.message || e));
 
-  let cf = null, fs = null;
-  try { cf = await cloudflareRequests(); } catch (e) { app.notes.push(String(e.message || e)); }
-  try { fs = await firestoreUsage(); } catch (e) { app.notes.push(String(e.message || e)); }
+  if (!(await reachable(cfg.url))) app.problems.push({ level: 'crit', label: 'Nicht erreichbar', text: 'Die App antwortet gerade nicht.', todo: 'Melde dich bei Claude.' });
 
-  if (cf !== null) app.bars.push({ ...bar('Aufrufe heute (Cloudflare)', cf, 100000), reset: resetText('UTC'), what: 'Aufrufe', kind: 'cf' });
-  if (fs) {
-    app.bars.push({ ...bar('Spieldaten gelesen heute', fs.reads, 50000), reset: resetText('America/Los_Angeles'), what: 'Lesezugriffe', kind: 'fs' });
-    app.bars.push({ ...bar('Spieldaten gespeichert heute', fs.writes, 20000), reset: resetText('America/Los_Angeles'), what: 'Speicherzugriffe', kind: 'fs' });
-    app.bars.push({ ...bar('Spieldaten gelöscht heute', fs.deletes, 20000), reset: resetText('America/Los_Angeles'), what: 'Löschzugriffe', kind: 'fs' });
+  if (cfg.cloudflare) {
+    app.providers.push('Cloudflare');
+    if (cf) {
+      const mine = cfg.cloudflare.script ? (cf.byScript[cfg.cloudflare.script] || 0) : null;
+      app.bars.push(bar('Cloudflare', 'Aufrufe heute', cf.total, LIMITS.cfRequests, {
+        sub: (mine !== null ? `davon diese App: ${fmt(mine)} · ` : '') + 'Limit gilt für alle Cloudflare-Apps zusammen',
+        reset: resetText('UTC')
+      }));
+      if (cfg.cloudflare.kv) {
+        app.bars.push(bar('Cloudflare', 'Speicher gelesen heute', cf.kv.read, LIMITS.kvReads, { reset: resetText('UTC') }));
+        app.bars.push(bar('Cloudflare', 'Speicher beschrieben heute', cf.kv.write, LIMITS.kvWrites, { reset: resetText('UTC') }));
+      }
+    } else app.facts.push({ provider: 'Cloudflare', text: env.CF_API_TOKEN ? 'Verbrauch gerade nicht abrufbar.' : 'Noch kein Schlüssel eingetragen.' });
   }
 
-  if (!up) {
-    return { ...app, level: 'crit', label: 'Nicht erreichbar', text: 'Die Spielseite antwortet gerade nicht.', todo: 'Melde dich bei Claude – dann schauen wir bei Cloudflare nach.' };
+  if (cfg.firebase) {
+    app.providers.push('Firebase');
+    try {
+      const fs = await firestore(cfg.firebase.project);
+      if (fs) {
+        const reset = resetText('America/Los_Angeles');
+        app.bars.push(bar('Firebase', 'Daten gelesen heute', fs.reads, LIMITS.fsReads, { reset }));
+        app.bars.push(bar('Firebase', 'Daten gespeichert heute', fs.writes, LIMITS.fsWrites, { reset }));
+        app.bars.push(bar('Firebase', 'Daten gelöscht heute', fs.deletes, LIMITS.fsDeletes, { reset }));
+      } else app.facts.push({ provider: 'Firebase', text: 'Noch kein Schlüssel eingetragen.' });
+    } catch (e) { note(e); app.facts.push({ provider: 'Firebase', text: 'Verbrauch gerade nicht abrufbar.' }); }
   }
-  const top = app.bars.slice().sort((a, b) => b.pct - a.pct)[0];
-  if (top && top.level !== 'ok') {
-    const crit = top.level === 'crit';
-    const full = top.pct >= 100;
-    return {
-      ...app, level: top.level, label: full ? 'Voll' : crit ? 'Fast voll' : 'Wird knapp', focus: top.label,
-      text: `${top.label}: ${top.pct} % vom Gratis-Kontingent. ${top.reset}`,
-      todo: full ? 'Das Spiel hakt bis zum Neustart. Melde dich, dann mache ich es sparsamer.' : 'Nichts tun – nur wenn es öfter passiert, melde dich.'
-    };
-  }
-  if (!pushOk) {
-    return { ...app, level: 'warn', label: 'Push gestört', text: 'Das Spiel läuft, aber „Du bist dran“-Meldungen werden gerade nicht verschickt.', todo: 'Melde dich bei Claude – vermutlich fehlt der Push-Schlüssel bei Cloudflare.' };
-  }
-  const missing = [cf === null && 'Cloudflare', fs === null && 'Firebase'].filter(Boolean);
-  return {
-    ...app, level: 'ok', label: 'Alles gut',
-    text: missing.length ? `Läuft. Verbrauch von ${missing.join(' und ')} wird noch nicht gemessen.` : 'Läuft. Weit weg von jeder Grenze.',
-    todo: missing.length ? 'Schlüssel eintragen – siehe Anleitung.' : ''
-  };
-}
 
-async function checkNba() {
-  const app = { id: 'nba', name: 'NBA Aktuell', bars: [], notes: [] };
-  const url = 'https://doktoroege.github.io/nba-aktuell/';
-  let updated = null;
-  try { const r = await get(url + 'data.json?t=' + Date.now()); if (r.ok) updated = new Date((await r.json()).updated); } catch { /* nicht erreichbar */ }
-  if (!updated || isNaN(updated)) {
-    const up = await reachable(url);
-    return { ...app, level: 'crit', label: up ? 'Keine Daten' : 'Nicht erreichbar', text: up ? 'Die App ist da, aber die Daten fehlen.' : 'Die App antwortet gerade nicht.', todo: 'Melde dich bei Claude.' };
+  if (cfg.github) {
+    app.providers.push('GitHub');
+    try {
+      const mb = await githubRepo(cfg.github.repo);
+      app.bars.push(bar('GitHub', 'Speicherplatz der Seite', mb, LIMITS.ghSiteMB, { text: `${mb < 10 ? mb.toFixed(1).replace('.', ',') : fmt(mb)} / ${fmt(LIMITS.ghSiteMB)} MB` }));
+    } catch (e) { note(e); app.facts.push({ provider: 'GitHub', text: 'Verbrauch gerade nicht abrufbar.' }); }
   }
-  const hours = (now - updated) / 3600000;
-  const when = berlinDay(updated) === berlinDay() ? `heute um ${berlinTime(updated)} Uhr` : `am ${updated.toLocaleDateString('de-DE', { timeZone: 'Europe/Berlin', day: 'numeric', month: 'numeric' })} um ${berlinTime(updated)} Uhr`;
-  app.facts = [`Letztes Daten-Update: ${when}`];
-  if (hours > 26) return { ...app, level: 'crit', label: 'Veraltet', text: `Seit über einem Tag keine neuen Daten (zuletzt ${when}).`, todo: 'Melde dich bei Claude – das automatische Update läuft nicht mehr.' };
-  if (hours > 14) return { ...app, level: 'warn', label: 'Update fehlt', text: `Das letzte Update war ${when}. Eins wurde wohl ausgelassen.`, todo: 'Nichts tun – wenn es morgen noch so ist, melde dich.' };
-  return { ...app, level: 'ok', label: 'Alles gut', text: `Die Daten wurden ${when} aktualisiert.`, todo: '' };
-}
 
-async function checkContainer() {
-  const app = { id: 'container', name: 'Container-Scanner', bars: [], notes: [] };
-  const up = await reachable('https://doktoroege.github.io/container-scanner/');
-  return up
-    ? { ...app, level: 'ok', label: 'Alles gut', text: 'Läuft.', todo: '' }
-    : { ...app, level: 'crit', label: 'Nicht erreichbar', text: 'Die App antwortet gerade nicht.', todo: 'Melde dich bei Claude.' };
+  if (cfg.pushCheck) {
+    let ok = false;
+    try { const r = await get(cfg.pushCheck); ok = r.ok && (await r.json()).ok === true; } catch { /* bleibt false */ }
+    if (!ok) app.problems.push({ level: 'warn', label: 'Push gestört', text: 'Die App läuft, aber „Du bist dran“-Meldungen gehen gerade nicht raus.', todo: 'Melde dich bei Claude – vermutlich fehlt der Push-Schlüssel bei Cloudflare.' });
+  }
+
+  if (cfg.dataJson) {
+    try {
+      const r = await get(cfg.dataJson + '?t=' + Date.now());
+      const updated = new Date((await r.json()).updated);
+      if (isNaN(updated)) throw new Error('kein Datum');
+      const hours = (now - updated) / 36e5;
+      const when = berlinDay(updated) === berlinDay() ? `heute um ${berlinTime(updated)} Uhr` : `am ${updated.toLocaleDateString('de-DE', { timeZone: 'Europe/Berlin', day: 'numeric', month: 'numeric' })} um ${berlinTime(updated)} Uhr`;
+      app.dataText = `Läuft. Daten aktualisiert ${when}.`;
+      if (hours > 26) app.problems.push({ level: 'crit', label: 'Daten veraltet', text: `Seit über einem Tag keine neuen Daten (zuletzt ${when}).`, todo: 'Melde dich bei Claude – das automatische Update läuft nicht mehr.' });
+      else if (hours > 14) app.problems.push({ level: 'warn', label: 'Update fehlt', text: `Das letzte Daten-Update war ${when}.`, todo: 'Nichts tun – wenn es morgen noch so ist, melde dich.' });
+    } catch { app.problems.push({ level: 'crit', label: 'Keine Daten', text: 'Die Daten der App fehlen.', todo: 'Melde dich bei Claude.' }); }
+  }
+
+  for (const b of app.bars) {
+    if (b.level === 'ok') continue;
+    const full = b.pct >= 100;
+    app.problems.push({
+      level: b.level, label: full ? 'Voll' : b.level === 'crit' ? 'Fast voll' : 'Wird knapp',
+      text: `${b.provider}: ${b.label} – ${b.pct} % vom Gratis-Kontingent. ${b.reset || ''}`.trim(),
+      todo: full ? 'Die App hakt bis zum Neustart. Melde dich, dann mache ich sie sparsamer.' : 'Nichts tun – nur wenn es öfter passiert, melde dich.'
+    });
+  }
+
+  const top = app.problems.sort((a, b) => RANK[b.level] - RANK[a.level])[0];
+  delete app.problems;
+  if (top) return { ...app, level: top.level, label: top.label, text: top.text, todo: top.todo };
+  return { ...app, level: 'ok', label: 'Alles gut', text: app.dataText || 'Läuft. Weit weg von jeder Grenze.', todo: '' };
 }
 
 // ---------- Push über ntfy ----------
@@ -194,15 +231,22 @@ async function push(title, message, priority = 3, tags = []) {
 }
 
 // ---------- Ablauf ----------
+const config = JSON.parse(await readFile('apps.json', 'utf8')).filter(a => a.url); // ohne Adresse = nicht online
 let old = {};
 try { old = JSON.parse(await readFile('status.json', 'utf8')); } catch { /* erster Lauf */ }
 const state = old.state || { notified: {}, warnDay: {} };
 const history = old.history || [];
 
+let cf = null, cfError = null;
+if (config.some(a => a.cloudflare)) { try { cf = await cloudflare(); } catch (e) { cfError = String(e.message || e); } }
+
 const apps = [];
-for (const [id, name, fn] of [['weed', 'Weed!', checkWeed], ['nba', 'NBA Aktuell', checkNba], ['container', 'Container-Scanner', checkContainer]]) {
-  try { apps.push(await fn()); }
-  catch (e) { apps.push({ id, name, level: 'off', label: 'Prüfung fehlgeschlagen', text: String(e.message || e), bars: [], notes: [] }); }
+for (const cfg of config) {
+  try {
+    const a = await checkApp(cfg, cf);
+    if (cfError && cfg.cloudflare) a.notes.push(cfError);
+    apps.push(a);
+  } catch (e) { apps.push({ id: cfg.id, name: cfg.name, level: 'off', label: 'Prüfung fehlgeschlagen', text: String(e.message || e), bars: [], facts: [], notes: [], providers: [] }); }
 }
 
 const hour = partsIn('Europe/Berlin').h;
@@ -214,11 +258,12 @@ if (env.TEST_PUSH === 'true') await push('Test vom App-Monitor', 'Wenn du das li
 for (const a of apps) {
   const told = state.notified[a.id] || 'ok';
   const log = text => history.unshift({ t: now.toISOString(), id: a.id, level: a.level, text });
+  const msg = `${a.text}\n${a.todo || ''}`.trim();
   if (a.level === 'crit' && told !== 'crit') {
-    if (await push(`${a.name}: ${a.label}`, `${a.text}\n${a.todo}`.trim(), 5, ['rotating_light'])) { state.notified[a.id] = 'crit'; log(`${a.name}: ${a.label}`); }
+    if (await push(`${a.name}: ${a.label}`, msg, 5, ['rotating_light'])) { state.notified[a.id] = 'crit'; log(`${a.name}: ${a.label}`); }
   } else if (a.level === 'warn' && RANK[told] < RANK.warn) {
-    if (!quiet && state.warnDay[a.id] !== today) {
-      if (await push(`${a.name}: ${a.label}`, `${a.text}\n${a.todo}`.trim(), 3, ['warning'])) { state.notified[a.id] = 'warn'; state.warnDay[a.id] = today; log(`${a.name}: ${a.label}`); }
+    if (!quiet && state.warnDay[a.id] !== today && await push(`${a.name}: ${a.label}`, msg, 3, ['warning'])) {
+      state.notified[a.id] = 'warn'; state.warnDay[a.id] = today; log(`${a.name}: ${a.label}`);
     }
   } else if (a.level === 'warn' && told === 'crit') {
     state.notified[a.id] = 'warn';
