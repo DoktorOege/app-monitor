@@ -36,6 +36,10 @@
   .show-details .details { display:flex; }
   .row { display:flex; justify-content:space-between; gap:8px; font-size:13px; }
   .row span:last-child { color:var(--muted); white-space:nowrap; }
+  .stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:8px; }
+  .stat { background:var(--bg); border-radius:10px; padding:8px 10px; display:flex; flex-direction:column; gap:2px; }
+  .stat span { font-size:12px; color:var(--muted); }
+  .stat b { font-size:15px; }
   .provider { display:flex; flex-direction:column; gap:12px; border-top:1px solid var(--line); padding-top:12px; }
   .pname { font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
   .meter { display:flex; flex-direction:column; gap:6px; }
@@ -73,6 +77,30 @@ function ago(iso) {
   return { text: `Zuletzt geprüft: ${day}, ${time} Uhr`, stale: min > 150 };
 }
 
+function rel(iso) {
+  if (!iso) return 'noch keiner';
+  const min = Math.round((Date.now() - new Date(iso)) / 60000);
+  if (min < 2) return 'gerade eben';
+  if (min < 60) return `vor ${min} Min.`;
+  const h = Math.round(min / 60);
+  if (h < 24) return `vor ${h} Std.`;
+  const d = Math.round(h / 24);
+  return d === 1 ? 'gestern' : `vor ${d} Tagen`;
+}
+const de = n => String(n).replace('.', ',');
+function statsHtml(app) {
+  const st = [];
+  if (app.visits) {
+    st.push(['Letzter Besuch', rel(app.visits.lastVisit)]);
+    st.push(['Aufrufe heute', app.visits.today.toLocaleString('de-DE')]);
+    st.push(['Aufrufe 7 Tage', app.visits.week.toLocaleString('de-DE')]);
+  }
+  if (app.uptime != null) st.push(['Erreichbar (30 Tage)', de(app.uptime) + ' %']);
+  if (app.ms != null) st.push(['Ladezeit', de((app.ms / 1000).toFixed(1)) + ' s']);
+  if (!st.length) return '';
+  return `<div class="stats">${st.map(([k, v]) => `<div class="stat"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('')}</div>`;
+}
+
 function render(s) {
   const a = ago(s.checkedAt);
   document.getElementById('checked').textContent = a.text + (a.stale ? ' – das ist schon länger her!' : '');
@@ -105,6 +133,7 @@ function render(s) {
       </div>
       <p class="text">${esc(app.text)}</p>
       ${app.updatedText ? `<p class="todo">Letztes Update der App: ${esc(app.updatedText)}</p>` : ''}
+      ${statsHtml(app)}
       ${app.todo ? `<p class="todo">Was tun? ${esc(app.todo)}</p>` : ''}
       ${groups}
       ${notes ? `<div class="details">${notes}</div>` : ''}

@@ -9,6 +9,10 @@ on:
         description: 'Test-Meldung aufs Handy schicken'
         type: boolean
         default: false
+      test_weekly:
+        description: 'Wochenbericht jetzt schicken'
+        type: boolean
+        default: false
   push:
     branches: [main]
     paths-ignore: ['status.json']
@@ -44,6 +48,7 @@ jobs:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
           TEST_PUSH: ${{ inputs.test_push }}
+          TEST_WEEKLY: ${{ inputs.test_weekly }}
 
       - name: Ergebnis speichern
         run: |

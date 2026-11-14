@@ -53,8 +53,11 @@ async function get(url, opts = {}, tries = 2) {
   }
 }
 async function reachable(url) {
-  try { return (await get(url, { headers: { 'cache-control': 'no-cache' } })).ok; } catch { return false; }
+  const t0 = Date.now();
+  try { const r = await get(url, { headers: { 'cache-control': 'no-cache' } }); await r.arrayBuffer(); return { ok: r.ok, ms: Date.now() - t0 }; }
+  catch { return { ok: false, ms: null }; }
 }
+const median = arr => { const a = arr.filter(n => n != null).sort((x, y) => x - y); return a.length ? a[Math.floor(a.length / 2)] : null; };
 function bar(provider, label, used, limit, opts = {}) {
   const p = pct(used, limit);
   return { provider, label, used, limit, text: `${fmt(used)} / ${fmt(limit)}${opts.unit || ''}`, pct: Math.round(p), level: levelOf(p), ...opts };
@@ -65,7 +68,7 @@ async function cloudflare() {
   if (!env.CF_API_TOKEN) return null;
   const since = startOfDay('UTC').toISOString();
   const query = `query($acc:String!,$since:Time!,$until:Time!){viewer{accounts(filter:{accountTag:$acc}){
-    workers:workersInvocationsAdaptive(limit:10000,filter:{datetime_geq:$since,datetime_leq:$until}){sum{requests} dimensions{scriptName}}
+    workers:workersInvocationsAdaptive(limit:10000,filter:{datetime_geq:$since,datetime_leq:$until}){sum{requests errors} dimensions{scriptName}}
     kv:kvOperationsAdaptiveGroups(limit:10000,filter:{datetime_geq:$since,datetime_leq:$until}){sum{requests} dimensions{actionType}}
   }}}`;
   const r = await get('https://api.cloudflare.com/client/v4/graphql', {
@@ -76,16 +79,41 @@ async function cloudflare() {
   const j = await r.json();
   const acc = j.data?.viewer?.accounts?.[0];
   if (!acc) throw new Error('Cloudflare: ' + (j.errors || []).map(e => e.message).join('; '));
-  const byScript = {};
+  const byScript = {}, errByScript = {};
   let total = 0;
-  for (const row of acc.workers || []) { const n = row.sum?.requests || 0; const s = row.dimensions?.scriptName || '?'; total += n; byScript[s] = (byScript[s] || 0) + n; }
+  for (const row of acc.workers || []) { const n = row.sum?.requests || 0; const s = row.dimensions?.scriptName || '?'; total += n; byScript[s] = (byScript[s] || 0) + n; errByScript[s] = (errByScript[s] || 0) + (row.sum?.errors || 0); }
   const kv = { read: 0, write: 0 };
   for (const row of acc.kv || []) {
     const t = row.dimensions?.actionType || '';
     if (t === 'read') kv.read += row.sum?.requests || 0;
     else if (['write', 'delete', 'list'].includes(t)) kv.write += row.sum?.requests || 0; // zählen alle gegen das 1.000er-Limit
   }
-  return { total, byScript, kv };
+  return { total, byScript, errByScript, kv };
+}
+
+// ---------- Besucher (Cloudflare Web Analytics, ohne Cookies) ----------
+async function visitors() {
+  if (!env.CF_API_TOKEN) return null;
+  const since = new Date(now.getTime() - 7 * 864e5).toISOString();
+  const query = `query($acc:String!,$since:Time!,$until:Time!){viewer{accounts(filter:{accountTag:$acc}){
+    rum:rumPageloadEventsAdaptiveGroups(limit:10000,filter:{datetime_geq:$since,datetime_leq:$until}){count dimensions{requestHost requestPath datetimeMinute}}
+  }}}`;
+  const r = await get('https://api.cloudflare.com/client/v4/graphql', {
+    method: 'POST',
+    headers: { authorization: `Bearer ${env.CF_API_TOKEN.trim()}`, 'content-type': 'application/json' },
+    body: JSON.stringify({ query, variables: { acc: CF_ACCOUNT_ID, since, until: now.toISOString() } })
+  });
+  const j = await r.json();
+  const rows = j.data?.viewer?.accounts?.[0]?.rum;
+  if (!rows) throw new Error('Besucher: ' + (j.errors || []).map(e => e.message).join('; '));
+  return rows.map(x => ({ host: x.dimensions.requestHost, path: x.dimensions.requestPath || '/', t: new Date(x.dimensions.datetimeMinute), n: x.count || 0 }));
+}
+function visitStats(rows, v) {
+  const mine = rows.filter(x => x.host === v.host && x.path.startsWith(v.path));
+  const today = berlinDay();
+  let last = null, todayN = 0, weekN = 0;
+  for (const x of mine) { weekN += x.n; if (berlinDay(x.t) === today) todayN += x.n; if (!last || x.t > last) last = x.t; }
+  return { lastVisit: last ? last.toISOString() : null, today: todayN, week: weekN };
 }
 
 // ---------- Google Firestore ----------
@@ -151,11 +179,31 @@ function whenText(d) {
 }
 
 // ---------- Eine App prüfen ----------
-async function checkApp(cfg, cf) {
+async function checkApp(cfg, cf, rum, state) {
   const app = { id: cfg.id, name: cfg.name, url: cfg.url, providers: [], bars: [], facts: [], notes: [], problems: [] };
   const note = e => app.notes.push(String(e.message || e));
 
-  if (!(await reachable(cfg.url))) app.problems.push({ level: 'crit', label: 'Nicht erreichbar', text: 'Die App antwortet gerade nicht.', todo: 'Melde dich bei Claude.' });
+  // erreichbar? + Ladezeit
+  const reach = await reachable(cfg.url);
+  if (!reach.ok) app.problems.push({ level: 'crit', label: 'Nicht erreichbar', text: 'Die App antwortet gerade nicht.', todo: 'Melde dich bei Claude.' });
+  app.ms = reach.ms;
+  // Erreichbarkeit der letzten 30 Tage
+  const up = (state.uptime[cfg.id] ||= {});
+  const d = berlinDay(); up[d] = up[d] || [0, 0]; up[d][0] += reach.ok ? 1 : 0; up[d][1] += 1;
+  for (const k of Object.keys(up).sort().slice(0, -30)) delete up[k];
+  const [okN, allN] = Object.values(up).reduce((s2, [o, t]) => [s2[0] + o, s2[1] + t], [0, 0]);
+  app.uptime = allN ? Math.floor((okN / allN) * 1000) / 10 : null;
+  // langsam? (deutlich langsamer als sonst, zweimal hintereinander)
+  const speeds = (state.speed[cfg.id] ||= []);
+  const usual = median(speeds);
+  const slowNow = reach.ok && reach.ms != null && usual != null && speeds.length >= 6 && reach.ms > Math.max(3 * usual, 3000);
+  if (slowNow && state.slow[cfg.id]) app.problems.push({ level: 'warn', label: 'Lädt langsam', text: `Die App braucht gerade ${(reach.ms / 1000).toFixed(1).replace('.', ',')} Sekunden zum Laden – sonst etwa ${(usual / 1000).toFixed(1).replace('.', ',')} Sekunden.`, todo: 'Nichts tun – meist ist das nach einer Stunde vorbei.' });
+  state.slow[cfg.id] = slowNow;
+  if (reach.ok && reach.ms != null) { speeds.push(reach.ms); if (speeds.length > 48) speeds.shift(); }
+  app.usualMs = usual;
+
+  // Besucher
+  if (cfg.visits && rum) Object.assign(app, { visits: visitStats(rum, cfg.visits) });
 
   if (cfg.cloudflare) {
     app.providers.push('Cloudflare');
@@ -165,6 +213,12 @@ async function checkApp(cfg, cf) {
         sub: (mine !== null ? `davon diese App: ${fmt(mine)} · ` : '') + 'Limit gilt für alle Cloudflare-Apps zusammen',
         reset: resetText('UTC')
       }));
+      if (cfg.cloudflare.script) {
+        const errs = cf.errByScript[cfg.cloudflare.script] || 0;
+        app.cfErrors = errs;
+        if (errs >= 5 && mine && errs / mine > 0.1) app.problems.push({ level: 'warn', label: 'Fehler im Server-Baustein', text: `Heute sind ${fmt(errs)} von ${fmt(mine)} Aufrufen bei Cloudflare mit Fehler abgebrochen.`, todo: 'Melde dich bei Claude – dann schauen wir in die Cloudflare-Logs.' });
+        app.facts.push({ provider: 'Cloudflare', text: `Fehler heute: ${fmt(errs)}` });
+      }
       if (cfg.cloudflare.kv) {
         app.bars.push(bar('Cloudflare', 'Speicher gelesen heute', cf.kv.read, LIMITS.kvReads, { reset: resetText('UTC') }));
         app.bars.push(bar('Cloudflare', 'Speicher beschrieben heute', cf.kv.write, LIMITS.kvWrites, { reset: resetText('UTC') }));
@@ -261,16 +315,21 @@ async function push(title, message, priority = 3, tags = []) {
 const config = JSON.parse(await readFile('apps.json', 'utf8')).filter(a => a.url); // ohne Adresse = nicht online
 let old = {};
 try { old = JSON.parse(await readFile('status.json', 'utf8')); } catch { /* erster Lauf */ }
-const state = old.state || { notified: {}, warnDay: {} };
+const state = old.state || {};
+for (const k of ['notified', 'warnDay', 'uptime', 'speed', 'slow']) state[k] ||= {};
 const history = old.history || [];
 
 let cf = null, cfError = null;
 if (config.some(a => a.cloudflare)) { try { cf = await cloudflare(); } catch (e) { cfError = String(e.message || e); } }
 
+let rum = null, rumError = null;
+if (config.some(a => a.visits)) { try { rum = await visitors(); } catch (e) { rumError = String(e.message || e); } }
+
 const apps = [];
 for (const cfg of config) {
   try {
-    const a = await checkApp(cfg, cf);
+    const a = await checkApp(cfg, cf, rum, state);
+    if (rumError && cfg.visits) a.notes.push(rumError);
     if (cfError && cfg.cloudflare) a.notes.push(cfError);
     apps.push(a);
   } catch (e) { apps.push({ id: cfg.id, name: cfg.name, level: 'off', label: 'Prüfung fehlgeschlagen', text: String(e.message || e), bars: [], facts: [], notes: [], providers: [] }); }
@@ -298,6 +357,20 @@ for (const a of apps) {
     if (told === 'crit' && !quiet) await push(`${a.name}: wieder in Ordnung`, a.text, 2, ['white_check_mark']);
     if (told !== 'crit' || !quiet) { state.notified[a.id] = 'ok'; log(`${a.name}: wieder in Ordnung`); }
   }
+}
+
+// ---------- Wochenbericht: sonntags ab 19 Uhr, einmal ----------
+const bp = partsIn('Europe/Berlin');
+const isSunday = new Date(Date.UTC(bp.y, bp.m - 1, bp.d)).getUTCDay() === 0;
+if ((isSunday && bp.h >= 19 && state.weeklyDay !== today) || env.TEST_WEEKLY === 'true') {
+  const lines = apps.map(a => {
+    const parts = [];
+    if (a.visits) parts.push(`${fmt(a.visits.week)} Aufrufe`);
+    if (a.uptime != null) parts.push(`${String(a.uptime).replace('.', ',')} % erreichbar`);
+    parts.push(a.level === 'ok' ? 'alles gut' : a.label);
+    return `${a.name}: ${parts.join(', ')}`;
+  });
+  if (await push('Wochenbericht deiner Apps', lines.join('\n'), 2, ['bar_chart']) && env.TEST_WEEKLY !== 'true') state.weeklyDay = today;
 }
 
 const out = { checkedAt: now.toISOString(), thresholds: { warn: WARN, crit: CRIT }, apps, state, history: history.slice(0, 15) };

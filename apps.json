@@ -10,7 +10,11 @@
     "firebase": {
       "project": "weed-online-kma"
     },
-    "versionUrl": "https://weed-kma.kma-online.workers.dev/version.json"
+    "versionUrl": "https://weed-kma.kma-online.workers.dev/version.json",
+    "visits": {
+      "host": "weed-kma.kma-online.workers.dev",
+      "path": "/"
+    }
   },
   {
     "id": "tvm",
@@ -20,7 +24,7 @@
       "script": "",
       "kv": true
     },
-    "_hinweis": "Noch nicht online. Sobald die App bei Cloudflare läuft: url und script eintragen, dann erscheint sie automatisch."
+    "_hinweis": "Noch nicht online. Sobald die App läuft: url eintragen (und bei Bedarf visits/cloudflare), dann erscheint sie automatisch."
   },
   {
     "id": "nba",
@@ -29,6 +33,10 @@
     "dataJson": "https://doktoroege.github.io/nba-aktuell/data.json",
     "github": {
       "repo": "DoktorOege/nba-aktuell"
+    },
+    "visits": {
+      "host": "doktoroege.github.io",
+      "path": "/nba-aktuell/"
     }
   },
   {
@@ -37,6 +45,10 @@
     "url": "https://doktoroege.github.io/container-scanner/",
     "github": {
       "repo": "DoktorOege/container-scanner"
+    },
+    "visits": {
+      "host": "doktoroege.github.io",
+      "path": "/container-scanner/"
     }
   }
 ]
