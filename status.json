@@ -1,0 +1,90 @@
+{
+ "checkedAt": "2026-11-14T16:25:44.136Z",
+ "thresholds": {
+  "warn": 70,
+  "crit": 90
+ },
+ "apps": [
+  {
+   "id": "weed",
+   "name": "Weed!",
+   "url": "https://weed-kma.kma-online.workers.dev/",
+   "providers": [
+    "Cloudflare",
+    "Firebase"
+   ],
+   "bars": [],
+   "facts": [
+    {
+     "provider": "Cloudflare",
+     "text": "Noch kein Schlüssel eingetragen."
+    },
+    {
+     "provider": "Firebase",
+     "text": "Noch kein Schlüssel eingetragen."
+    }
+   ],
+   "notes": [],
+   "level": "ok",
+   "label": "Alles gut",
+   "text": "Läuft. Weit weg von jeder Grenze.",
+   "todo": ""
+  },
+  {
+   "id": "nba",
+   "name": "NBA Aktuell",
+   "url": "https://doktoroege.github.io/nba-aktuell/",
+   "providers": [
+    "GitHub"
+   ],
+   "bars": [
+    {
+     "provider": "GitHub",
+     "label": "Speicherplatz der Seite",
+     "used": 0.724609375,
+     "limit": 1024,
+     "text": "0,7 / 1.024 MB",
+     "pct": 0,
+     "level": "ok"
+    }
+   ],
+   "facts": [],
+   "notes": [],
+   "dataText": "Läuft. Daten aktualisiert heute um 07:42 Uhr.",
+   "level": "ok",
+   "label": "Alles gut",
+   "text": "Läuft. Daten aktualisiert heute um 07:42 Uhr.",
+   "todo": ""
+  },
+  {
+   "id": "container",
+   "name": "Container-Scanner",
+   "url": "https://doktoroege.github.io/container-scanner/",
+   "providers": [
+    "GitHub"
+   ],
+   "bars": [
+    {
+     "provider": "GitHub",
+     "label": "Speicherplatz der Seite",
+     "used": 0.03515625,
+     "limit": 1024,
+     "text": "0,0 / 1.024 MB",
+     "pct": 0,
+     "level": "ok"
+    }
+   ],
+   "facts": [],
+   "notes": [],
+   "level": "ok",
+   "label": "Alles gut",
+   "text": "Läuft. Weit weg von jeder Grenze.",
+   "todo": ""
+  }
+ ],
+ "state": {
+  "notified": {},
+  "warnDay": {}
+ },
+ "history": []
+}
