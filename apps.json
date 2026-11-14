@@ -4,14 +4,22 @@
     "name": "Weed!",
     "url": "https://weed-kma.kma-online.workers.dev/",
     "pushCheck": "https://weed-kma.kma-online.workers.dev/api/push",
-    "cloudflare": { "script": "weed-kma" },
-    "firebase": { "project": "weed-online-kma" }
+    "cloudflare": {
+      "script": "weed-kma"
+    },
+    "firebase": {
+      "project": "weed-online-kma"
+    },
+    "versionUrl": "https://weed-kma.kma-online.workers.dev/version.json"
   },
   {
     "id": "tvm",
     "name": "Meppen Basketball",
     "url": "",
-    "cloudflare": { "script": "", "kv": true },
+    "cloudflare": {
+      "script": "",
+      "kv": true
+    },
     "_hinweis": "Noch nicht online. Sobald die App bei Cloudflare läuft: url und script eintragen, dann erscheint sie automatisch."
   },
   {
@@ -19,12 +27,16 @@
     "name": "NBA Aktuell",
     "url": "https://doktoroege.github.io/nba-aktuell/",
     "dataJson": "https://doktoroege.github.io/nba-aktuell/data.json",
-    "github": { "repo": "DoktorOege/nba-aktuell" }
+    "github": {
+      "repo": "DoktorOege/nba-aktuell"
+    }
   },
   {
     "id": "container",
     "name": "Container-Scanner",
     "url": "https://doktoroege.github.io/container-scanner/",
-    "github": { "repo": "DoktorOege/container-scanner" }
+    "github": {
+      "repo": "DoktorOege/container-scanner"
+    }
   }
 ]

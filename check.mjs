@@ -139,7 +139,15 @@ async function githubRepo(repo) {
   if (env.GITHUB_TOKEN) headers.authorization = `Bearer ${env.GITHUB_TOKEN}`;
   const r = await get(`https://api.github.com/repos/${repo}`, { headers });
   if (!r.ok) throw new Error(`GitHub ${repo}: ${r.status}`);
-  return (await r.json()).size / 1024; // KB -> MB
+  const j = await r.json();
+  return { mb: j.size / 1024, pushed: j.pushed_at ? new Date(j.pushed_at) : null };
+}
+function whenText(d) {
+  if (!d || isNaN(d)) return null;
+  const t = berlinTime(d) + ' Uhr';
+  if (berlinDay(d) === berlinDay()) return `heute, ${t}`;
+  if (berlinDay(d) === berlinDay(new Date(now.getTime() - 864e5))) return `gestern, ${t}`;
+  return `${d.toLocaleDateString('de-DE', { timeZone: 'Europe/Berlin', day: 'numeric', month: 'numeric', year: 'numeric' })}, ${t}`;
 }
 
 // ---------- Eine App prüfen ----------
@@ -184,9 +192,22 @@ async function checkApp(cfg, cf) {
   if (cfg.github) {
     app.providers.push('GitHub');
     try {
-      const mb = await githubRepo(cfg.github.repo);
+      const { mb, pushed } = await githubRepo(cfg.github.repo);
+      if (pushed && !app.updated) app.updated = pushed.toISOString();
       app.bars.push(bar('GitHub', 'Speicherplatz der Seite', mb, LIMITS.ghSiteMB, { text: `${mb < 10 ? mb.toFixed(1).replace('.', ',') : fmt(mb)} / ${fmt(LIMITS.ghSiteMB)} MB` }));
     } catch (e) { note(e); app.facts.push({ provider: 'GitHub', text: 'Verbrauch gerade nicht abrufbar.' }); }
+  }
+
+  if (cfg.versionUrl) { // z. B. {"v":"14.11.2026, 02:16 Uhr"}
+    try {
+      const v = (await (await get(cfg.versionUrl + '?t=' + Date.now())).json()).v || '';
+      const m = String(v).match(/(\d{1,2})\.(\d{1,2})\.(\d{4}),?\s*(\d{1,2}):(\d{2})/);
+      if (m) {
+        const guess = Date.UTC(+m[3], m[2] - 1, +m[1], +m[4], +m[5]);
+        const off = (() => { const p = partsIn('Europe/Berlin', new Date(guess)); return Date.UTC(p.y, p.m - 1, p.d, p.h, p.min) - guess; })();
+        app.updated = new Date(guess - off).toISOString();
+      }
+    } catch { /* ohne Versionsangabe */ }
   }
 
   if (cfg.pushCheck) {
@@ -218,6 +239,7 @@ async function checkApp(cfg, cf) {
     });
   }
 
+  app.updatedText = whenText(app.updated ? new Date(app.updated) : null);
   const top = app.problems.sort((a, b) => RANK[b.level] - RANK[a.level])[0];
   delete app.problems;
   if (top) return { ...app, level: top.level, label: top.label, text: top.text, todo: top.todo };
