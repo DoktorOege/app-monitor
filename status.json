@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-15T17:45:02.706Z",
+ "checkedAt": "2026-11-15T18:52:22.729Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 23,
+     "used": 25,
      "limit": 100000,
-     "text": "23 / 100.000",
+     "text": "25 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 23 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 25 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,13 +39,13 @@
     }
    ],
    "notes": [],
-   "ms": 394,
+   "ms": 262,
    "uptime": 100,
    "usualMs": 298,
    "visits": {
-    "lastVisit": "2026-11-15T16:23:00.000Z",
-    "today": 26,
-    "week": 49
+    "lastVisit": "2026-11-15T18:44:00.000Z",
+    "today": 29,
+    "week": 52
    },
    "cfErrors": 0,
    "updated": "2026-11-14T01:16:00.000Z",
@@ -75,21 +75,21 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 144,
+   "ms": 162,
    "uptime": 100,
    "usualMs": 135,
    "visits": {
-    "lastVisit": "2026-11-15T17:24:00.000Z",
-    "today": 21,
-    "week": 82
+    "lastVisit": "2026-11-15T17:55:00.000Z",
+    "today": 25,
+    "week": 86
    },
    "updated": "2026-11-14T17:30:49.000Z",
    "dataText": "Läuft. Daten aktualisiert am 14.11. um 17:40 Uhr.",
    "updatedText": "gestern, 18:30 Uhr",
-   "level": "warn",
-   "label": "Update fehlt",
-   "text": "Das letzte Daten-Update war am 14.11. um 17:40 Uhr.",
-   "todo": "Nichts tun – wenn es morgen noch so ist, melde dich."
+   "level": "crit",
+   "label": "Daten veraltet",
+   "text": "Seit über einem Tag keine neuen Daten (zuletzt am 14.11. um 17:40 Uhr).",
+   "todo": "Melde dich bei Claude – das automatische Update läuft nicht mehr."
   },
   {
    "id": "container",
@@ -111,7 +111,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 31,
+   "ms": 97,
    "uptime": 100,
    "usualMs": 82,
    "visits": {
@@ -129,7 +129,7 @@
  ],
  "state": {
   "notified": {
-   "nba": "warn"
+   "nba": "crit"
   },
   "warnDay": {
    "nba": "2026-11-15"
@@ -141,8 +141,8 @@
      10
     ],
     "2026-11-15": [
-     19,
-     19
+     20,
+     20
     ]
    },
    "nba": {
@@ -151,8 +151,8 @@
      10
     ],
     "2026-11-15": [
-     19,
-     19
+     20,
+     20
     ]
    },
    "container": {
@@ -161,8 +161,8 @@
      10
     ],
     "2026-11-15": [
-     19,
-     19
+     20,
+     20
     ]
    }
   },
@@ -196,7 +196,8 @@
     306,
     186,
     595,
-    394
+    394,
+    262
    ],
    "nba": [
     140,
@@ -227,7 +228,8 @@
     131,
     125,
     86,
-    144
+    144,
+    162
    ],
    "container": [
     34,
@@ -258,16 +260,24 @@
     48,
     79,
     45,
-    31
+    31,
+    97
    ]
   },
   "slow": {
    "weed": false,
    "nba": false,
    "container": false
-  }
+  },
+  "weeklyDay": "2026-11-15"
  },
  "history": [
+  {
+   "t": "2026-11-15T18:52:22.729Z",
+   "id": "nba",
+   "level": "crit",
+   "text": "NBA Aktuell: Daten veraltet"
+  },
   {
    "t": "2026-11-15T07:10:10.978Z",
    "id": "nba",
