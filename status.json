@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-15T11:47:51.637Z",
+ "checkedAt": "2026-11-15T12:59:09.139Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 14,
+     "used": 16,
      "limit": 100000,
-     "text": "14 / 100.000",
+     "text": "16 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 14 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 16 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,13 +39,13 @@
     }
    ],
    "notes": [],
-   "ms": 172,
+   "ms": 155,
    "uptime": 100,
-   "usualMs": 316,
+   "usualMs": 298,
    "visits": {
-    "lastVisit": "2026-11-15T09:01:00.000Z",
-    "today": 15,
-    "week": 38
+    "lastVisit": "2026-11-15T12:21:00.000Z",
+    "today": 17,
+    "week": 40
    },
    "cfErrors": 0,
    "updated": "2026-11-14T01:16:00.000Z",
@@ -75,13 +75,13 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 81,
+   "ms": 134,
    "uptime": 100,
-   "usualMs": 154,
+   "usualMs": 153,
    "visits": {
-    "lastVisit": "2026-11-15T11:43:00.000Z",
-    "today": 12,
-    "week": 73
+    "lastVisit": "2026-11-15T12:42:00.000Z",
+    "today": 18,
+    "week": 79
    },
    "updated": "2026-11-14T17:30:49.000Z",
    "dataText": "Läuft. Daten aktualisiert am 14.11. um 17:40 Uhr.",
@@ -111,9 +111,9 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 68,
+   "ms": 126,
    "uptime": 100,
-   "usualMs": 102,
+   "usualMs": 85,
    "visits": {
     "lastVisit": "2026-11-14T20:02:00.000Z",
     "today": 0,
@@ -141,8 +141,8 @@
      10
     ],
     "2026-11-15": [
-     13,
-     13
+     14,
+     14
     ]
    },
    "nba": {
@@ -151,8 +151,8 @@
      10
     ],
     "2026-11-15": [
-     13,
-     13
+     14,
+     14
     ]
    },
    "container": {
@@ -161,8 +161,8 @@
      10
     ],
     "2026-11-15": [
-     13,
-     13
+     14,
+     14
     ]
    }
   },
@@ -190,7 +190,8 @@
     270,
     194,
     197,
-    172
+    172,
+    155
    ],
    "nba": [
     140,
@@ -215,7 +216,8 @@
     131,
     159,
     349,
-    81
+    81,
+    134
    ],
    "container": [
     34,
@@ -240,7 +242,8 @@
     82,
     82,
     118,
-    68
+    68,
+    126
    ]
   },
   "slow": {
