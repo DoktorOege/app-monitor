@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-15T22:46:10.727Z",
+ "checkedAt": "2026-11-15T23:51:39.633Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 30,
+     "used": 31,
      "limit": 100000,
-     "text": "30 / 100.000",
+     "text": "31 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 30 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 31 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,17 +39,17 @@
     }
    ],
    "notes": [],
-   "ms": 314,
+   "ms": 277,
    "uptime": 100,
-   "usualMs": 266,
+   "usualMs": 270,
    "visits": {
-    "lastVisit": "2026-11-15T21:46:00.000Z",
-    "today": 36,
-    "week": 59
+    "lastVisit": "2026-11-15T23:07:00.000Z",
+    "today": 2,
+    "week": 61
    },
    "cfErrors": 0,
    "updated": "2026-11-14T01:16:00.000Z",
-   "updatedText": "gestern, 02:16 Uhr",
+   "updatedText": "14.11.2026, 02:16 Uhr",
    "level": "ok",
    "label": "Alles gut",
    "text": "Läuft. Weit weg von jeder Grenze.",
@@ -75,17 +75,17 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 317,
+   "ms": 155,
    "uptime": 100,
-   "usualMs": 140,
+   "usualMs": 144,
    "visits": {
-    "lastVisit": "2026-11-15T22:23:00.000Z",
-    "today": 27,
-    "week": 88
+    "lastVisit": "2026-11-15T23:24:00.000Z",
+    "today": 1,
+    "week": 89
    },
    "updated": "2026-11-14T17:30:49.000Z",
    "dataText": "Läuft. Daten aktualisiert am 14.11. um 17:40 Uhr.",
-   "updatedText": "gestern, 18:30 Uhr",
+   "updatedText": "14.11.2026, 18:30 Uhr",
    "level": "crit",
    "label": "Daten veraltet",
    "text": "Seit über einem Tag keine neuen Daten (zuletzt am 14.11. um 17:40 Uhr).",
@@ -111,16 +111,16 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 86,
+   "ms": 56,
    "uptime": 100,
-   "usualMs": 82,
+   "usualMs": 85,
    "visits": {
     "lastVisit": "2026-11-14T20:02:00.000Z",
     "today": 0,
     "week": 1
    },
    "updated": "2026-11-14T17:30:51.000Z",
-   "updatedText": "gestern, 18:30 Uhr",
+   "updatedText": "14.11.2026, 18:30 Uhr",
    "level": "ok",
    "label": "Alles gut",
    "text": "Läuft. Weit weg von jeder Grenze.",
@@ -143,6 +143,10 @@
     "2026-11-15": [
      24,
      24
+    ],
+    "2026-11-16": [
+     1,
+     1
     ]
    },
    "nba": {
@@ -153,6 +157,10 @@
     "2026-11-15": [
      24,
      24
+    ],
+    "2026-11-16": [
+     1,
+     1
     ]
    },
    "container": {
@@ -163,6 +171,10 @@
     "2026-11-15": [
      24,
      24
+    ],
+    "2026-11-16": [
+     1,
+     1
     ]
    }
   },
@@ -201,7 +213,8 @@
     266,
     202,
     163,
-    314
+    314,
+    277
    ],
    "nba": [
     140,
@@ -237,7 +250,8 @@
     170,
     61,
     354,
-    317
+    317,
+    155
    ],
    "container": [
     34,
@@ -273,7 +287,8 @@
     111,
     41,
     117,
-    86
+    86,
+    56
    ]
   },
   "slow": {
