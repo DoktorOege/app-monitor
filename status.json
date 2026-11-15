@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-15T10:51:12.355Z",
+ "checkedAt": "2026-11-15T11:47:51.637Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 13,
+     "used": 14,
      "limit": 100000,
-     "text": "13 / 100.000",
+     "text": "14 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 13 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 14 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,7 +39,7 @@
     }
    ],
    "notes": [],
-   "ms": 197,
+   "ms": 172,
    "uptime": 100,
    "usualMs": 316,
    "visits": {
@@ -75,13 +75,13 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 349,
+   "ms": 81,
    "uptime": 100,
-   "usualMs": 153,
+   "usualMs": 154,
    "visits": {
-    "lastVisit": "2026-11-15T08:36:00.000Z",
-    "today": 9,
-    "week": 70
+    "lastVisit": "2026-11-15T11:43:00.000Z",
+    "today": 12,
+    "week": 73
    },
    "updated": "2026-11-14T17:30:49.000Z",
    "dataText": "Läuft. Daten aktualisiert am 14.11. um 17:40 Uhr.",
@@ -111,9 +111,9 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 118,
+   "ms": 68,
    "uptime": 100,
-   "usualMs": 85,
+   "usualMs": 102,
    "visits": {
     "lastVisit": "2026-11-14T20:02:00.000Z",
     "today": 0,
@@ -141,8 +141,8 @@
      10
     ],
     "2026-11-15": [
-     12,
-     12
+     13,
+     13
     ]
    },
    "nba": {
@@ -151,8 +151,8 @@
      10
     ],
     "2026-11-15": [
-     12,
-     12
+     13,
+     13
     ]
    },
    "container": {
@@ -161,8 +161,8 @@
      10
     ],
     "2026-11-15": [
-     12,
-     12
+     13,
+     13
     ]
    }
   },
@@ -189,7 +189,8 @@
     545,
     270,
     194,
-    197
+    197,
+    172
    ],
    "nba": [
     140,
@@ -213,7 +214,8 @@
     116,
     131,
     159,
-    349
+    349,
+    81
    ],
    "container": [
     34,
@@ -237,7 +239,8 @@
     71,
     82,
     82,
-    118
+    118,
+    68
    ]
   },
   "slow": {
