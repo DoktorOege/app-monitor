@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-15T15:47:33.869Z",
+ "checkedAt": "2026-11-15T16:48:58.645Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 21,
+     "used": 22,
      "limit": 100000,
-     "text": "21 / 100.000",
+     "text": "22 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 21 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 22 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,13 +39,13 @@
     }
    ],
    "notes": [],
-   "ms": 186,
+   "ms": 595,
    "uptime": 100,
-   "usualMs": 298,
+   "usualMs": 270,
    "visits": {
-    "lastVisit": "2026-11-15T14:48:00.000Z",
-    "today": 23,
-    "week": 46
+    "lastVisit": "2026-11-15T16:23:00.000Z",
+    "today": 26,
+    "week": 49
    },
    "cfErrors": 0,
    "updated": "2026-11-14T01:16:00.000Z",
@@ -75,9 +75,9 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 125,
+   "ms": 86,
    "uptime": 100,
-   "usualMs": 140,
+   "usualMs": 135,
    "visits": {
     "lastVisit": "2026-11-15T15:27:00.000Z",
     "today": 20,
@@ -111,9 +111,9 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 79,
+   "ms": 45,
    "uptime": 100,
-   "usualMs": 85,
+   "usualMs": 82,
    "visits": {
     "lastVisit": "2026-11-14T20:02:00.000Z",
     "today": 0,
@@ -141,8 +141,8 @@
      10
     ],
     "2026-11-15": [
-     17,
-     17
+     18,
+     18
     ]
    },
    "nba": {
@@ -151,8 +151,8 @@
      10
     ],
     "2026-11-15": [
-     17,
-     17
+     18,
+     18
     ]
    },
    "container": {
@@ -161,8 +161,8 @@
      10
     ],
     "2026-11-15": [
-     17,
-     17
+     18,
+     18
     ]
    }
   },
@@ -194,7 +194,8 @@
     155,
     251,
     306,
-    186
+    186,
+    595
    ],
    "nba": [
     140,
@@ -223,7 +224,8 @@
     134,
     66,
     131,
-    125
+    125,
+    86
    ],
    "container": [
     34,
@@ -252,7 +254,8 @@
     126,
     40,
     48,
-    79
+    79,
+    45
    ]
   },
   "slow": {
