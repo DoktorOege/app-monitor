@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-17T16:02:27.159Z",
+ "checkedAt": "2026-11-17T17:11:35.757Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 54,
+     "used": 60,
      "limit": 100000,
-     "text": "54 / 100.000",
+     "text": "60 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 54 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 60 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,21 +39,21 @@
     }
    ],
    "notes": [],
-   "ms": 410,
+   "ms": 3450,
    "uptime": 100,
-   "usualMs": 269,
+   "usualMs": 270,
    "visits": {
-    "lastVisit": "2026-11-17T16:00:00.000Z",
-    "today": 68,
-    "week": 354
+    "lastVisit": "2026-11-17T16:57:00.000Z",
+    "today": 77,
+    "week": 363
    },
    "cfErrors": 0,
    "updated": "2026-11-14T01:16:00.000Z",
    "updatedText": "14.11.2026, 02:16 Uhr",
-   "level": "ok",
-   "label": "Alles gut",
-   "text": "Läuft. Weit weg von jeder Grenze.",
-   "todo": ""
+   "level": "warn",
+   "label": "Push gestört",
+   "text": "Die App läuft, aber „Du bist dran“-Meldungen gehen gerade nicht raus.",
+   "todo": "Melde dich bei Claude – vermutlich fehlt der Push-Schlüssel bei Cloudflare."
   },
   {
    "id": "nba",
@@ -75,13 +75,13 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 174,
+   "ms": 266,
    "uptime": 100,
    "usualMs": 155,
    "visits": {
-    "lastVisit": "2026-11-17T13:50:00.000Z",
-    "today": 11,
-    "week": 124
+    "lastVisit": "2026-11-17T16:49:00.000Z",
+    "today": 12,
+    "week": 125
    },
    "updated": "2026-11-14T17:30:49.000Z",
    "dataText": "Läuft. Daten aktualisiert am 14.11. um 17:40 Uhr.",
@@ -111,7 +111,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 111,
+   "ms": 115,
    "uptime": 100,
    "usualMs": 96,
    "visits": {
@@ -129,10 +129,12 @@
  ],
  "state": {
   "notified": {
-   "nba": "crit"
+   "nba": "crit",
+   "weed": "warn"
   },
   "warnDay": {
-   "nba": "2026-11-15"
+   "nba": "2026-11-15",
+   "weed": "2026-11-17"
   },
   "uptime": {
    "weed": {
@@ -149,8 +151,8 @@
      15
     ],
     "2026-11-17": [
-     14,
-     14
+     15,
+     15
     ]
    },
    "nba": {
@@ -167,8 +169,8 @@
      15
     ],
     "2026-11-17": [
-     14,
-     14
+     15,
+     15
     ]
    },
    "container": {
@@ -185,14 +187,13 @@
      15
     ],
     "2026-11-17": [
-     14,
-     14
+     15,
+     15
     ]
    }
   },
   "speed": {
    "weed": [
-    356,
     330,
     263,
     545,
@@ -239,10 +240,10 @@
     353,
     175,
     397,
-    410
+    410,
+    3450
    ],
    "nba": [
-    164,
     76,
     160,
     116,
@@ -289,10 +290,10 @@
     201,
     149,
     138,
-    174
+    174,
+    266
    ],
    "container": [
-    115,
     53,
     102,
     71,
@@ -339,17 +340,24 @@
     79,
     220,
     121,
-    111
+    111,
+    115
    ]
   },
   "slow": {
-   "weed": false,
+   "weed": true,
    "nba": false,
    "container": false
   },
   "weeklyDay": "2026-11-15"
  },
  "history": [
+  {
+   "t": "2026-11-17T17:11:35.757Z",
+   "id": "weed",
+   "level": "warn",
+   "text": "Weed!: Push gestört"
+  },
   {
    "t": "2026-11-15T18:52:22.729Z",
    "id": "nba",
