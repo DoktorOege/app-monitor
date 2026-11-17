@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-17T18:07:43.442Z",
+ "checkedAt": "2026-11-17T19:08:25.780Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 63,
+     "used": 69,
      "limit": 100000,
-     "text": "63 / 100.000",
+     "text": "69 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 63 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 69 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,13 +39,13 @@
     }
    ],
    "notes": [],
-   "ms": 446,
+   "ms": 470,
    "uptime": 100,
    "usualMs": 270,
    "visits": {
-    "lastVisit": "2026-11-17T18:06:00.000Z",
-    "today": 80,
-    "week": 366
+    "lastVisit": "2026-11-17T18:55:00.000Z",
+    "today": 91,
+    "week": 377
    },
    "cfErrors": 0,
    "updated": "2026-11-14T01:16:00.000Z",
@@ -75,9 +75,9 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 207,
+   "ms": 203,
    "uptime": 100,
-   "usualMs": 155,
+   "usualMs": 159,
    "visits": {
     "lastVisit": "2026-11-17T16:49:00.000Z",
     "today": 12,
@@ -111,9 +111,9 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 257,
+   "ms": 97,
    "uptime": 100,
-   "usualMs": 96,
+   "usualMs": 97,
    "visits": {
     "lastVisit": "2026-11-14T20:02:00.000Z",
     "today": 0,
@@ -151,8 +151,8 @@
      15
     ],
     "2026-11-17": [
-     16,
-     16
+     17,
+     17
     ]
    },
    "nba": {
@@ -169,8 +169,8 @@
      15
     ],
     "2026-11-17": [
-     16,
-     16
+     17,
+     17
     ]
    },
    "container": {
@@ -187,14 +187,13 @@
      15
     ],
     "2026-11-17": [
-     16,
-     16
+     17,
+     17
     ]
    }
   },
   "speed": {
    "weed": [
-    263,
     545,
     270,
     194,
@@ -241,10 +240,10 @@
     397,
     410,
     3450,
-    446
+    446,
+    470
    ],
    "nba": [
-    160,
     116,
     131,
     159,
@@ -291,10 +290,10 @@
     138,
     174,
     266,
-    207
+    207,
+    203
    ],
    "container": [
-    102,
     71,
     82,
     82,
@@ -341,7 +340,8 @@
     121,
     111,
     115,
-    257
+    257,
+    97
    ]
   },
   "slow": {
