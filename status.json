@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-17T14:29:01.145Z",
+ "checkedAt": "2026-11-17T16:02:27.159Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 47,
+     "used": 54,
      "limit": 100000,
-     "text": "47 / 100.000",
+     "text": "54 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 47 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 54 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,13 +39,13 @@
     }
    ],
    "notes": [],
-   "ms": 397,
+   "ms": 410,
    "uptime": 100,
-   "usualMs": 267,
+   "usualMs": 269,
    "visits": {
-    "lastVisit": "2026-11-17T14:20:00.000Z",
-    "today": 56,
-    "week": 342
+    "lastVisit": "2026-11-17T16:00:00.000Z",
+    "today": 68,
+    "week": 354
    },
    "cfErrors": 0,
    "updated": "2026-11-14T01:16:00.000Z",
@@ -75,7 +75,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 138,
+   "ms": 174,
    "uptime": 100,
    "usualMs": 155,
    "visits": {
@@ -111,9 +111,9 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 121,
+   "ms": 111,
    "uptime": 100,
-   "usualMs": 92,
+   "usualMs": 96,
    "visits": {
     "lastVisit": "2026-11-14T20:02:00.000Z",
     "today": 0,
@@ -149,8 +149,8 @@
      15
     ],
     "2026-11-17": [
-     13,
-     13
+     14,
+     14
     ]
    },
    "nba": {
@@ -167,8 +167,8 @@
      15
     ],
     "2026-11-17": [
-     13,
-     13
+     14,
+     14
     ]
    },
    "container": {
@@ -185,14 +185,13 @@
      15
     ],
     "2026-11-17": [
-     13,
-     13
+     14,
+     14
     ]
    }
   },
   "speed": {
    "weed": [
-    265,
     356,
     330,
     263,
@@ -239,10 +238,10 @@
     190,
     353,
     175,
-    397
+    397,
+    410
    ],
    "nba": [
-    167,
     164,
     76,
     160,
@@ -289,10 +288,10 @@
     125,
     201,
     149,
-    138
+    138,
+    174
    ],
    "container": [
-    109,
     115,
     53,
     102,
@@ -339,7 +338,8 @@
     669,
     79,
     220,
-    121
+    121,
+    111
    ]
   },
   "slow": {
