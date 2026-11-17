@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-17T17:11:35.757Z",
+ "checkedAt": "2026-11-17T18:07:43.442Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 60,
+     "used": 63,
      "limit": 100000,
-     "text": "60 / 100.000",
+     "text": "63 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 60 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 63 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,21 +39,21 @@
     }
    ],
    "notes": [],
-   "ms": 3450,
+   "ms": 446,
    "uptime": 100,
    "usualMs": 270,
    "visits": {
-    "lastVisit": "2026-11-17T16:57:00.000Z",
-    "today": 77,
-    "week": 363
+    "lastVisit": "2026-11-17T18:06:00.000Z",
+    "today": 80,
+    "week": 366
    },
    "cfErrors": 0,
    "updated": "2026-11-14T01:16:00.000Z",
    "updatedText": "14.11.2026, 02:16 Uhr",
-   "level": "warn",
-   "label": "Push gestört",
-   "text": "Die App läuft, aber „Du bist dran“-Meldungen gehen gerade nicht raus.",
-   "todo": "Melde dich bei Claude – vermutlich fehlt der Push-Schlüssel bei Cloudflare."
+   "level": "ok",
+   "label": "Alles gut",
+   "text": "Läuft. Weit weg von jeder Grenze.",
+   "todo": ""
   },
   {
    "id": "nba",
@@ -75,7 +75,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 266,
+   "ms": 207,
    "uptime": 100,
    "usualMs": 155,
    "visits": {
@@ -111,7 +111,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 115,
+   "ms": 257,
    "uptime": 100,
    "usualMs": 96,
    "visits": {
@@ -130,7 +130,7 @@
  "state": {
   "notified": {
    "nba": "crit",
-   "weed": "warn"
+   "weed": "ok"
   },
   "warnDay": {
    "nba": "2026-11-15",
@@ -151,8 +151,8 @@
      15
     ],
     "2026-11-17": [
-     15,
-     15
+     16,
+     16
     ]
    },
    "nba": {
@@ -169,8 +169,8 @@
      15
     ],
     "2026-11-17": [
-     15,
-     15
+     16,
+     16
     ]
    },
    "container": {
@@ -187,14 +187,13 @@
      15
     ],
     "2026-11-17": [
-     15,
-     15
+     16,
+     16
     ]
    }
   },
   "speed": {
    "weed": [
-    330,
     263,
     545,
     270,
@@ -241,10 +240,10 @@
     175,
     397,
     410,
-    3450
+    3450,
+    446
    ],
    "nba": [
-    76,
     160,
     116,
     131,
@@ -291,10 +290,10 @@
     149,
     138,
     174,
-    266
+    266,
+    207
    ],
    "container": [
-    53,
     102,
     71,
     82,
@@ -341,17 +340,24 @@
     220,
     121,
     111,
-    115
+    115,
+    257
    ]
   },
   "slow": {
-   "weed": true,
+   "weed": false,
    "nba": false,
    "container": false
   },
   "weeklyDay": "2026-11-15"
  },
  "history": [
+  {
+   "t": "2026-11-17T18:07:43.442Z",
+   "id": "weed",
+   "level": "ok",
+   "text": "Weed!: wieder in Ordnung"
+  },
   {
    "t": "2026-11-17T17:11:35.757Z",
    "id": "weed",
