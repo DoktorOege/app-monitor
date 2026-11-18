@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-18T04:02:02.921Z",
+ "checkedAt": "2026-11-18T05:08:42.098Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 6,
+     "used": 8,
      "limit": 100000,
-     "text": "6 / 100.000",
+     "text": "8 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 6 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 8 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,13 +39,13 @@
     }
    ],
    "notes": [],
-   "ms": 476,
+   "ms": 244,
    "uptime": 100,
-   "usualMs": 325,
+   "usualMs": 353,
    "visits": {
-    "lastVisit": "2026-11-17T22:17:00.000Z",
-    "today": 0,
-    "week": 414
+    "lastVisit": "2026-11-18T04:42:00.000Z",
+    "today": 6,
+    "week": 420
    },
    "cfErrors": 0,
    "updated": "2026-11-14T01:16:00.000Z",
@@ -75,7 +75,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 156,
+   "ms": 128,
    "uptime": 100,
    "usualMs": 162,
    "visits": {
@@ -111,9 +111,9 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 117,
+   "ms": 131,
    "uptime": 100,
-   "usualMs": 97,
+   "usualMs": 99,
    "visits": {
     "lastVisit": "2026-11-14T20:02:00.000Z",
     "today": 0,
@@ -155,8 +155,8 @@
      21
     ],
     "2026-11-18": [
-     4,
-     4
+     5,
+     5
     ]
    },
    "nba": {
@@ -177,8 +177,8 @@
      21
     ],
     "2026-11-18": [
-     4,
-     4
+     5,
+     5
     ]
    },
    "container": {
@@ -199,14 +199,13 @@
      21
     ],
     "2026-11-18": [
-     4,
-     4
+     5,
+     5
     ]
    }
   },
   "speed": {
    "weed": [
-    186,
     595,
     394,
     262,
@@ -253,10 +252,10 @@
     284,
     823,
     301,
-    476
+    476,
+    244
    ],
    "nba": [
-    125,
     86,
     144,
     162,
@@ -303,10 +302,10 @@
     117,
     188,
     273,
-    156
+    156,
+    128
    ],
    "container": [
-    79,
     45,
     31,
     97,
@@ -353,7 +352,8 @@
     79,
     51,
     124,
-    117
+    117,
+    131
    ]
   },
   "slow": {
