@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-19T22:55:46.694Z",
+ "checkedAt": "2026-11-19T23:52:10.910Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 81,
+     "used": 84,
      "limit": 100000,
-     "text": "81 / 100.000",
+     "text": "84 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 81 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 84 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,17 +39,17 @@
     }
    ],
    "notes": [],
-   "ms": 741,
+   "ms": 538,
    "uptime": 100,
-   "usualMs": 410,
+   "usualMs": 418,
    "visits": {
-    "lastVisit": "2026-11-19T22:43:00.000Z",
-    "today": 132,
-    "week": 670
+    "lastVisit": "2026-11-19T23:47:00.000Z",
+    "today": 9,
+    "week": 680
    },
    "cfErrors": 0,
    "updated": "2026-11-19T22:52:00.000Z",
-   "updatedText": "heute, 23:52 Uhr",
+   "updatedText": "gestern, 23:52 Uhr",
    "level": "ok",
    "label": "Alles gut",
    "text": "Läuft. Weit weg von jeder Grenze.",
@@ -75,20 +75,20 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 145,
+   "ms": 134,
    "uptime": 100,
-   "usualMs": 171,
+   "usualMs": 168,
    "visits": {
     "lastVisit": "2026-11-19T18:37:00.000Z",
-    "today": 33,
+    "today": 0,
     "week": 183
    },
    "updated": "2026-11-19T15:20:45.000Z",
-   "dataText": "Läuft. Daten aktualisiert heute um 16:12 Uhr.",
-   "updatedText": "heute, 16:20 Uhr",
+   "dataText": "Läuft. Daten aktualisiert am 19.11. um 16:12 Uhr.",
+   "updatedText": "gestern, 16:20 Uhr",
    "level": "ok",
    "label": "Alles gut",
-   "text": "Läuft. Daten aktualisiert heute um 16:12 Uhr.",
+   "text": "Läuft. Daten aktualisiert am 19.11. um 16:12 Uhr.",
    "todo": ""
   },
   {
@@ -111,9 +111,9 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 61,
+   "ms": 105,
    "uptime": 100,
-   "usualMs": 105,
+   "usualMs": 104,
    "visits": {
     "lastVisit": "2026-11-14T20:02:00.000Z",
     "today": 0,
@@ -161,6 +161,10 @@
     "2026-11-19": [
      20,
      20
+    ],
+    "2026-11-20": [
+     1,
+     1
     ]
    },
    "nba": {
@@ -187,6 +191,10 @@
     "2026-11-19": [
      20,
      20
+    ],
+    "2026-11-20": [
+     1,
+     1
     ]
    },
    "container": {
@@ -213,12 +221,15 @@
     "2026-11-19": [
      20,
      20
+    ],
+    "2026-11-20": [
+     1,
+     1
     ]
    }
   },
   "speed": {
    "weed": [
-    3450,
     446,
     470,
     1264,
@@ -265,10 +276,10 @@
     839,
     457,
     682,
-    741
+    741,
+    538
    ],
    "nba": [
-    266,
     207,
     203,
     154,
@@ -315,10 +326,10 @@
     189,
     81,
     171,
-    145
+    145,
+    134
    ],
    "container": [
-    115,
     257,
     97,
     99,
@@ -365,7 +376,8 @@
     125,
     40,
     109,
-    61
+    61,
+    105
    ]
   },
   "slow": {
