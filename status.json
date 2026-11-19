@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-19T17:14:30.083Z",
+ "checkedAt": "2026-11-19T18:02:00.422Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 44,
+     "used": 45,
      "limit": 100000,
-     "text": "44 / 100.000",
+     "text": "45 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 44 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 45 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,13 +39,13 @@
     }
    ],
    "notes": [],
-   "ms": 309,
+   "ms": 586,
    "uptime": 100,
    "usualMs": 350,
    "visits": {
-    "lastVisit": "2026-11-19T16:57:00.000Z",
-    "today": 61,
-    "week": 599
+    "lastVisit": "2026-11-19T17:42:00.000Z",
+    "today": 65,
+    "week": 603
    },
    "cfErrors": 0,
    "updated": "2026-11-14T01:16:00.000Z",
@@ -75,7 +75,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 319,
+   "ms": 163,
    "uptime": 100,
    "usualMs": 168,
    "visits": {
@@ -111,7 +111,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 74,
+   "ms": 331,
    "uptime": 100,
    "usualMs": 104,
    "visits": {
@@ -159,8 +159,8 @@
      21
     ],
     "2026-11-19": [
-     14,
-     14
+     15,
+     15
     ]
    },
    "nba": {
@@ -185,8 +185,8 @@
      21
     ],
     "2026-11-19": [
-     14,
-     14
+     15,
+     15
     ]
    },
    "container": {
@@ -211,14 +211,13 @@
      21
     ],
     "2026-11-19": [
-     14,
-     14
+     15,
+     15
     ]
    }
   },
   "speed": {
    "weed": [
-    325,
     190,
     353,
     175,
@@ -265,10 +264,10 @@
     553,
     756,
     541,
-    309
+    309,
+    586
    ],
    "nba": [
-    161,
     125,
     201,
     149,
@@ -315,10 +314,10 @@
     141,
     171,
     403,
-    319
+    319,
+    163
    ],
    "container": [
-    85,
     669,
     79,
     220,
@@ -365,7 +364,8 @@
     112,
     76,
     257,
-    74
+    74,
+    331
    ]
   },
   "slow": {
