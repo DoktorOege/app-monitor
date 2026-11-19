@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-19T10:17:52.374Z",
+ "checkedAt": "2026-11-19T12:05:40.259Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 20,
+     "used": 25,
      "limit": 100000,
-     "text": "20 / 100.000",
+     "text": "25 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 20 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 25 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,13 +39,13 @@
     }
    ],
    "notes": [],
-   "ms": 170,
+   "ms": 268,
    "uptime": 100,
-   "usualMs": 325,
+   "usualMs": 315,
    "visits": {
-    "lastVisit": "2026-11-19T10:02:00.000Z",
-    "today": 27,
-    "week": 565
+    "lastVisit": "2026-11-19T11:58:00.000Z",
+    "today": 34,
+    "week": 571
    },
    "cfErrors": 0,
    "updated": "2026-11-14T01:16:00.000Z",
@@ -75,7 +75,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 136,
+   "ms": 75,
    "uptime": 100,
    "usualMs": 168,
    "visits": {
@@ -111,7 +111,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 56,
+   "ms": 47,
    "uptime": 100,
    "usualMs": 105,
    "visits": {
@@ -159,8 +159,8 @@
      21
     ],
     "2026-11-19": [
-     9,
-     9
+     10,
+     10
     ]
    },
    "nba": {
@@ -185,8 +185,8 @@
      21
     ],
     "2026-11-19": [
-     9,
-     9
+     10,
+     10
     ]
    },
    "container": {
@@ -211,14 +211,13 @@
      21
     ],
     "2026-11-19": [
-     9,
-     9
+     10,
+     10
     ]
    }
   },
   "speed": {
    "weed": [
-    243,
     259,
     214,
     2690,
@@ -265,10 +264,10 @@
     265,
     279,
     227,
-    170
+    170,
+    268
    ],
    "nba": [
-    166,
     260,
     171,
     169,
@@ -315,10 +314,10 @@
     148,
     168,
     136,
-    136
+    136,
+    75
    ],
    "container": [
-    127,
     80,
     108,
     129,
@@ -365,7 +364,8 @@
     122,
     114,
     51,
-    56
+    56,
+    47
    ]
   },
   "slow": {
