@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-20T06:13:13.892Z",
+ "checkedAt": "2026-11-20T07:27:39.875Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 11,
+     "used": 16,
      "limit": 100000,
-     "text": "11 / 100.000",
+     "text": "16 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 11 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 16 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,17 +39,17 @@
     }
    ],
    "notes": [],
-   "ms": 463,
+   "ms": 600,
    "uptime": 100,
-   "usualMs": 392,
+   "usualMs": 418,
    "visits": {
-    "lastVisit": "2026-11-20T06:11:00.000Z",
-    "today": 25,
-    "week": 696
+    "lastVisit": "2026-11-20T07:20:00.000Z",
+    "today": 36,
+    "week": 707
    },
    "cfErrors": 0,
-   "updated": "2026-11-20T02:11:00.000Z",
-   "updatedText": "heute, 03:11 Uhr",
+   "updated": "2026-11-20T07:09:00.000Z",
+   "updatedText": "heute, 08:09 Uhr",
    "level": "ok",
    "label": "Alles gut",
    "text": "Läuft. Weit weg von jeder Grenze.",
@@ -66,7 +66,7 @@
     {
      "provider": "GitHub",
      "label": "Speicherplatz der Seite",
-     "used": 0.9228515625,
+     "used": 0.9453125,
      "limit": 1024,
      "text": "0,9 / 1.024 MB",
      "pct": 0,
@@ -75,7 +75,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 163,
+   "ms": 141,
    "uptime": 100,
    "usualMs": 163,
    "visits": {
@@ -111,9 +111,9 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 120,
+   "ms": 81,
    "uptime": 100,
-   "usualMs": 104,
+   "usualMs": 105,
    "visits": {
     "lastVisit": "2026-11-14T20:02:00.000Z",
     "today": 0,
@@ -163,8 +163,8 @@
      20
     ],
     "2026-11-20": [
-     6,
-     6
+     7,
+     7
     ]
    },
    "nba": {
@@ -193,8 +193,8 @@
      20
     ],
     "2026-11-20": [
-     6,
-     6
+     7,
+     7
     ]
    },
    "container": {
@@ -223,14 +223,13 @@
      20
     ],
     "2026-11-20": [
-     6,
-     6
+     7,
+     7
     ]
    }
   },
   "speed": {
    "weed": [
-    435,
     284,
     823,
     301,
@@ -277,10 +276,10 @@
     581,
     263,
     584,
-    463
+    463,
+    600
    ],
    "nba": [
-    66,
     117,
     188,
     273,
@@ -327,10 +326,10 @@
     103,
     76,
     180,
-    163
+    163,
+    141
    ],
    "container": [
-    49,
     79,
     51,
     124,
@@ -377,7 +376,8 @@
     64,
     55,
     120,
-    120
+    120,
+    81
    ]
   },
   "slow": {
