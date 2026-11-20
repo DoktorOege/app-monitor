@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-20T20:06:57.984Z",
+ "checkedAt": "2026-11-20T20:57:34.204Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 51,
+     "used": 55,
      "limit": 100000,
-     "text": "51 / 100.000",
+     "text": "55 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 51 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 55 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,13 +39,13 @@
     }
    ],
    "notes": [],
-   "ms": 341,
+   "ms": 454,
    "uptime": 100,
    "usualMs": 443,
    "visits": {
-    "lastVisit": "2026-11-20T20:04:00.000Z",
-    "today": 119,
-    "week": 790
+    "lastVisit": "2026-11-20T20:41:00.000Z",
+    "today": 123,
+    "week": 794
    },
    "cfErrors": 0,
    "updated": "2026-11-20T11:03:00.000Z",
@@ -75,7 +75,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 374,
+   "ms": 371,
    "uptime": 100,
    "usualMs": 161,
    "visits": {
@@ -111,7 +111,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 182,
+   "ms": 243,
    "uptime": 100,
    "usualMs": 105,
    "visits": {
@@ -163,8 +163,8 @@
      20
     ],
     "2026-11-20": [
-     18,
-     18
+     19,
+     19
     ]
    },
    "nba": {
@@ -193,8 +193,8 @@
      20
     ],
     "2026-11-20": [
-     18,
-     18
+     19,
+     19
     ]
    },
    "container": {
@@ -223,14 +223,13 @@
      20
     ],
     "2026-11-20": [
-     18,
-     18
+     19,
+     19
     ]
    }
   },
   "speed": {
    "weed": [
-    292,
     371,
     2329,
     548,
@@ -277,10 +276,10 @@
     208,
     281,
     533,
-    341
+    341,
+    454
    ],
    "nba": [
-    306,
     171,
     175,
     216,
@@ -327,10 +326,10 @@
     124,
     261,
     263,
-    374
+    374,
+    371
    ],
    "container": [
-    101,
     119,
     66,
     94,
@@ -377,7 +376,8 @@
     370,
     106,
     90,
-    182
+    182,
+    243
    ]
   },
   "slow": {
