@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-20T11:11:37.176Z",
+ "checkedAt": "2026-11-20T12:04:27.415Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 24,
+     "used": 26,
      "limit": 100000,
-     "text": "24 / 100.000",
+     "text": "26 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 24 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 26 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,13 +39,13 @@
     }
    ],
    "notes": [],
-   "ms": 630,
+   "ms": 387,
    "uptime": 100,
-   "usualMs": 392,
+   "usualMs": 418,
    "visits": {
-    "lastVisit": "2026-11-20T11:03:00.000Z",
-    "today": 65,
-    "week": 736
+    "lastVisit": "2026-11-20T11:48:00.000Z",
+    "today": 74,
+    "week": 745
    },
    "cfErrors": 0,
    "updated": "2026-11-20T11:03:00.000Z",
@@ -77,11 +77,11 @@
    "notes": [],
    "ms": 155,
    "uptime": 100,
-   "usualMs": 162,
+   "usualMs": 161,
    "visits": {
-    "lastVisit": "2026-11-20T09:47:00.000Z",
-    "today": 6,
-    "week": 189
+    "lastVisit": "2026-11-20T11:32:00.000Z",
+    "today": 7,
+    "week": 190
    },
    "updated": "2026-11-20T06:03:50.000Z",
    "dataText": "Läuft. Daten aktualisiert heute um 06:03 Uhr.",
@@ -111,7 +111,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 107,
+   "ms": 96,
    "uptime": 100,
    "usualMs": 105,
    "visits": {
@@ -163,8 +163,8 @@
      20
     ],
     "2026-11-20": [
-     10,
-     10
+     11,
+     11
     ]
    },
    "nba": {
@@ -193,8 +193,8 @@
      20
     ],
     "2026-11-20": [
-     10,
-     10
+     11,
+     11
     ]
    },
    "container": {
@@ -223,14 +223,13 @@
      20
     ],
     "2026-11-20": [
-     10,
-     10
+     11,
+     11
     ]
    }
   },
   "speed": {
    "weed": [
-    476,
     244,
     275,
     280,
@@ -277,10 +276,10 @@
     600,
     320,
     301,
-    630
+    630,
+    387
    ],
    "nba": [
-    156,
     128,
     190,
     188,
@@ -327,10 +326,10 @@
     141,
     86,
     140,
+    155,
     155
    ],
    "container": [
-    117,
     131,
     104,
     81,
@@ -377,7 +376,8 @@
     81,
     50,
     176,
-    107
+    107,
+    96
    ]
   },
   "slow": {
