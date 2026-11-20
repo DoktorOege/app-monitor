@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-20T22:54:42.499Z",
+ "checkedAt": "2026-11-20T23:54:43.287Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 69,
+     "used": 70,
      "limit": 100000,
-     "text": "69 / 100.000",
+     "text": "70 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 69 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 70 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,17 +39,17 @@
     }
    ],
    "notes": [],
-   "ms": 374,
+   "ms": 211,
    "uptime": 100,
-   "usualMs": 454,
+   "usualMs": 443,
    "visits": {
-    "lastVisit": "2026-11-20T22:24:00.000Z",
-    "today": 139,
-    "week": 810
+    "lastVisit": "2026-11-20T23:19:00.000Z",
+    "today": 2,
+    "week": 813
    },
    "cfErrors": 0,
    "updated": "2026-11-20T11:03:00.000Z",
-   "updatedText": "heute, 12:03 Uhr",
+   "updatedText": "gestern, 12:03 Uhr",
    "level": "ok",
    "label": "Alles gut",
    "text": "Läuft. Weit weg von jeder Grenze.",
@@ -75,20 +75,20 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 398,
+   "ms": 154,
    "uptime": 100,
    "usualMs": 161,
    "visits": {
     "lastVisit": "2026-11-20T17:20:00.000Z",
-    "today": 24,
+    "today": 0,
     "week": 207
    },
    "updated": "2026-11-20T17:19:03.000Z",
-   "dataText": "Läuft. Daten aktualisiert heute um 18:02 Uhr.",
-   "updatedText": "heute, 18:19 Uhr",
+   "dataText": "Läuft. Daten aktualisiert am 20.11. um 18:02 Uhr.",
+   "updatedText": "gestern, 18:19 Uhr",
    "level": "ok",
    "label": "Alles gut",
-   "text": "Läuft. Daten aktualisiert heute um 18:02 Uhr.",
+   "text": "Läuft. Daten aktualisiert am 20.11. um 18:02 Uhr.",
    "todo": ""
   },
   {
@@ -111,7 +111,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 87,
+   "ms": 39,
    "uptime": 100,
    "usualMs": 105,
    "visits": {
@@ -165,6 +165,10 @@
     "2026-11-20": [
      21,
      21
+    ],
+    "2026-11-21": [
+     1,
+     1
     ]
    },
    "nba": {
@@ -195,6 +199,10 @@
     "2026-11-20": [
      21,
      21
+    ],
+    "2026-11-21": [
+     1,
+     1
     ]
    },
    "container": {
@@ -225,12 +233,15 @@
     "2026-11-20": [
      21,
      21
+    ],
+    "2026-11-21": [
+     1,
+     1
     ]
    }
   },
   "speed": {
    "weed": [
-    548,
     984,
     221,
     443,
@@ -277,10 +288,10 @@
     341,
     454,
     331,
-    374
+    374,
+    211
    ],
    "nba": [
-    216,
     340,
     68,
     168,
@@ -327,10 +338,10 @@
     374,
     371,
     214,
-    398
+    398,
+    154
    ],
    "container": [
-    94,
     115,
     52,
     180,
@@ -377,7 +388,8 @@
     182,
     243,
     101,
-    87
+    87,
+    39
    ]
   },
   "slow": {
