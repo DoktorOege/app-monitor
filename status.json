@@ -1,5 +1,5 @@
 {
- "checkedAt": "2026-11-20T07:27:39.875Z",
+ "checkedAt": "2026-11-20T09:11:41.291Z",
  "thresholds": {
   "warn": 70,
   "crit": 90
@@ -17,12 +17,12 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 16,
+     "used": 18,
      "limit": 100000,
-     "text": "16 / 100.000",
+     "text": "18 / 100.000",
      "pct": 0,
      "level": "ok",
-     "sub": "davon diese App: 16 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 18 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -39,13 +39,13 @@
     }
    ],
    "notes": [],
-   "ms": 600,
+   "ms": 320,
    "uptime": 100,
    "usualMs": 418,
    "visits": {
-    "lastVisit": "2026-11-20T07:20:00.000Z",
-    "today": 36,
-    "week": 707
+    "lastVisit": "2026-11-20T08:32:00.000Z",
+    "today": 46,
+    "week": 717
    },
    "cfErrors": 0,
    "updated": "2026-11-20T07:09:00.000Z",
@@ -75,7 +75,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 141,
+   "ms": 86,
    "uptime": 100,
    "usualMs": 163,
    "visits": {
@@ -111,7 +111,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 81,
+   "ms": 50,
    "uptime": 100,
    "usualMs": 105,
    "visits": {
@@ -163,8 +163,8 @@
      20
     ],
     "2026-11-20": [
-     7,
-     7
+     8,
+     8
     ]
    },
    "nba": {
@@ -193,8 +193,8 @@
      20
     ],
     "2026-11-20": [
-     7,
-     7
+     8,
+     8
     ]
    },
    "container": {
@@ -223,14 +223,13 @@
      20
     ],
     "2026-11-20": [
-     7,
-     7
+     8,
+     8
     ]
    }
   },
   "speed": {
    "weed": [
-    284,
     823,
     301,
     476,
@@ -277,10 +276,10 @@
     263,
     584,
     463,
-    600
+    600,
+    320
    ],
    "nba": [
-    117,
     188,
     273,
     156,
@@ -327,10 +326,10 @@
     76,
     180,
     163,
-    141
+    141,
+    86
    ],
    "container": [
-    79,
     51,
     124,
     117,
@@ -377,7 +376,8 @@
     55,
     120,
     120,
-    81
+    81,
+    50
    ]
   },
   "slow": {
