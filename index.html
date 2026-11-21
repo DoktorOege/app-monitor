@@ -3,82 +3,141 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1D4ED8">
+<meta name="theme-color" content="#F3F5F9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1320" media="(prefers-color-scheme: dark)">
 <title>Meine Apps</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon.svg">
 <style>
-  :root { --bg:#F4F6FA; --card:#fff; --text:#111827; --muted:#4B5563; --line:#E5E7EB; --accent:#1D4ED8;
-          --ok:#16A34A; --ok-t:#166534; --warn:#D97706; --warn-t:#92400E; --warn-bg:#FEF3C7;
-          --crit:#DC2626; --crit-t:#991B1B; --crit-bg:#FEE2E2; --off:#9CA3AF; --ok-bg:#DCFCE7; }
-  * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-  main { max-width: 520px; margin: 0 auto; padding: 28px 16px 40px; display:flex; flex-direction:column; gap:16px; }
-  h1 { margin:0; font-size:30px; color:var(--accent); }
-  .sub { margin:4px 0 0; font-size:14px; color:var(--muted); }
-  .summary { border-radius:16px; padding:18px; display:flex; flex-direction:column; gap:6px; }
-  .summary b { font-size:20px; }
-  .summary span { font-size:15px; }
-  .s-ok { background:var(--ok-bg); color:var(--ok-t); }
-  .s-warn { background:var(--warn-bg); color:var(--warn-t); }
-  .s-crit { background:var(--crit-bg); color:var(--crit-t); }
-  .card { background:var(--card); border-radius:16px; padding:18px; display:flex; flex-direction:column; gap:10px; box-shadow:0 1px 2px rgba(17,24,39,.06); }
-  .head { display:flex; align-items:center; gap:12px; }
-  .dot { width:18px; height:18px; border-radius:50%; flex:none; }
-  .name { font-size:19px; font-weight:600; }
-  .label { margin-left:auto; font-size:14px; font-weight:600; text-align:right; }
-  .text { margin:0; font-size:15px; line-height:1.5; color:#374151; }
-  .todo { margin:0; font-size:13px; color:var(--muted); }
-  .track { height:12px; background:var(--line); border-radius:6px; overflow:hidden; }
-  .fill { height:12px; border-radius:6px; }
-  .details { display:none; flex-direction:column; gap:12px; border-top:1px solid var(--line); padding-top:12px; }
-  .show-details .details { display:flex; }
-  .row { display:flex; justify-content:space-between; gap:8px; font-size:13px; }
-  .row span:last-child { color:var(--muted); white-space:nowrap; }
-  .stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:8px; }
-  .stat { background:var(--bg); border-radius:10px; padding:8px 10px; display:flex; flex-direction:column; gap:2px; }
+  :root {
+    --bg:#F3F5F9; --card:#FFFFFF; --soft:#EEF1F6; --text:#0F172A; --muted:#475467; --line:#E3E7EE;
+    --accent:#2F5BEA; --accent-t:#1D3FB8;
+    --ok:#16A34A; --ok-t:#14632F; --ok-bg:#DCFCE7;
+    --warn:#D97706; --warn-t:#8A4B06; --warn-bg:#FEF3C7;
+    --crit:#DC2626; --crit-t:#991B1B; --crit-bg:#FEE2E2;
+    --off:#98A2B3; --shadow:0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#0E1320; --card:#161D2E; --soft:#1E2740; --text:#EEF2FA; --muted:#A7B0C4; --line:#26304A;
+      --accent:#7C9BFF; --accent-t:#A9BCFF;
+      --ok:#22C55E; --ok-t:#86EFAC; --ok-bg:#12321F;
+      --warn:#F59E0B; --warn-t:#FCD34D; --warn-bg:#3A2A0B;
+      --crit:#F87171; --crit-t:#FCA5A5; --crit-bg:#3B1517;
+      --shadow:none;
+    }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing:antialiased; }
+  main { max-width:560px; margin:0 auto; padding:20px 16px 48px; display:flex; flex-direction:column; gap:14px; }
+  header { padding:4px 2px 2px; }
+  h1 { margin:0; font-size:28px; letter-spacing:-.02em; }
+  .sub { margin:2px 0 0; font-size:13px; color:var(--muted); }
+  .card { background:var(--card); border-radius:18px; box-shadow:var(--shadow); }
+  .sec-title { margin:10px 2px 0; font-size:12px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); }
+  .hero { padding:18px; display:flex; flex-direction:column; gap:14px; }
+  .hero-top { display:flex; align-items:center; gap:14px; }
+  .hero-icon { width:52px; height:52px; border-radius:16px; display:flex; align-items:center; justify-content:center; flex:none; }
+  .hero h2 { margin:0; font-size:20px; letter-spacing:-.01em; }
+  .hero p { margin:2px 0 0; font-size:14px; color:var(--muted); }
+  .kpis { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .kpi { background:var(--soft); border-radius:12px; padding:10px; display:flex; flex-direction:column; gap:2px; min-width:0; }
+  .kpi span { font-size:12px; color:var(--muted); }
+  .kpi b { font-size:17px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .alert { padding:14px 16px; display:flex; gap:12px; }
+  .alert .dot { margin-top:5px; }
+  .alert b { font-size:15px; }
+  .alert p { margin:3px 0 0; font-size:14px; line-height:1.45; }
+  .alert .todo { margin-top:6px; font-size:13px; color:var(--muted); }
+  .quota { padding:6px 16px; }
+  .qrow { padding:12px 0; display:flex; flex-direction:column; gap:7px; border-bottom:1px solid var(--line); }
+  .qrow:last-child { border-bottom:0; }
+  .app-body .qrow { padding:4px 0; border-bottom:0; }
+  .qhead { display:flex; justify-content:space-between; gap:10px; font-size:14px; }
+  .qhead > span:last-child { color:var(--muted); white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .qprov { font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .track { height:8px; background:var(--soft); border-radius:99px; overflow:hidden; }
+  .fill { height:8px; border-radius:99px; min-width:4px; }
+  .hint { font-size:12px; color:var(--muted); line-height:1.4; }
+  a { color:var(--accent-t); }
+  .apps { overflow:hidden; }
+  details.app { border-bottom:1px solid var(--line); }
+  details.app:last-child { border-bottom:0; }
+  details.app > summary { list-style:none; cursor:pointer; padding:14px 16px; display:flex; align-items:center; gap:12px; min-height:64px; }
+  details.app > summary::-webkit-details-marker { display:none; }
+  summary:focus-visible, a:focus-visible { outline:2px solid var(--accent); outline-offset:-2px; border-radius:12px; }
+  .avatar { width:40px; height:40px; border-radius:12px; flex:none; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:17px; position:relative; background:var(--soft); color:var(--text); }
+  .avatar i { position:absolute; right:-3px; bottom:-3px; width:14px; height:14px; border-radius:50%; border:3px solid var(--card); }
+  .app-main { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .app-name { font-size:16px; font-weight:600; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .badge { font-size:11px; font-weight:700; border-radius:99px; padding:2px 8px; }
+  .app-sub { font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .spark { flex:none; width:64px; height:28px; }
+  .chev { flex:none; transition:transform .2s; color:var(--muted); }
+  details[open] > summary .chev { transform:rotate(90deg); }
+  .app-body { padding:0 16px 16px; display:flex; flex-direction:column; gap:12px; }
+  .app-text { margin:0; font-size:14px; line-height:1.5; }
+  .stats { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+  .stat { background:var(--soft); border-radius:12px; padding:9px 11px; display:flex; flex-direction:column; gap:1px; }
   .stat span { font-size:12px; color:var(--muted); }
   .stat b { font-size:15px; }
-  .provider { display:flex; flex-direction:column; gap:12px; border-top:1px solid var(--line); padding-top:12px; }
-  .pname { font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
-  .meter { display:flex; flex-direction:column; gap:6px; }
-  .hint { font-size:12px; color:var(--muted); line-height:1.4; }
-  .track { height:10px; } .fill { height:10px; }
-  .legend { display:flex; flex-direction:column; gap:8px; padding:4px 4px 0; font-size:14px; color:#374151; }
-  .legend div { display:flex; align-items:center; gap:10px; }
-  .legend i { width:12px; height:12px; border-radius:50%; display:inline-block; }
-  button.link { background:none; border:0; padding:12px 4px; font:inherit; font-size:15px; font-weight:600; color:var(--accent); text-align:left; cursor:pointer; min-height:44px; }
-  .history { display:none; }
-  .show-details .history { display:flex; }
-  .hist-item { font-size:13px; color:#374151; display:flex; gap:10px; align-items:baseline; }
-  .hist-item time { color:var(--muted); white-space:nowrap; }
+  .open-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; border-radius:12px; background:var(--accent); color:#fff; text-decoration:none; font-weight:600; font-size:15px; }
+  @media (prefers-color-scheme: dark) { .open-btn { color:#0E1320; } }
+  .dot { width:10px; height:10px; border-radius:50%; flex:none; display:inline-block; }
+  .foot { padding:4px 16px; }
+  .foot > * { border-bottom:1px solid var(--line); }
+  .foot > :last-child { border-bottom:0; }
+  .foot summary, .foot a.row { list-style:none; cursor:pointer; min-height:52px; display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:15px; font-weight:500; color:var(--text); text-decoration:none; }
+  .foot summary::-webkit-details-marker { display:none; }
+  .foot .inner { padding:0 0 14px; display:flex; flex-direction:column; gap:8px; font-size:14px; }
+  .hist { display:flex; gap:10px; align-items:baseline; font-size:13px; }
+  .hist time { margin-left:auto; color:var(--muted); white-space:nowrap; }
+  .cal { display:grid; grid-template-columns:repeat(15,1fr); gap:4px; }
+  .cal i { aspect-ratio:1; border-radius:4px; background:var(--soft); }
+  .cal-legend { display:flex; justify-content:space-between; }
+  .hours { display:flex; align-items:flex-end; gap:3px; height:84px; padding-top:6px; }
+  .hours i { flex:1; border-radius:3px 3px 0 0; background:var(--accent); opacity:.85; min-height:2px; }
+  .hours-axis { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); }
+  .live { font-size:11px; font-weight:700; border-radius:99px; padding:2px 8px; white-space:nowrap; }
+  .check-btn { white-space:nowrap; flex:none; min-height:44px; padding:0 16px; border-radius:12px; border:1px solid var(--line); background:var(--card); color:var(--text); font:inherit; font-size:14px; font-weight:600; display:inline-flex; align-items:center; gap:8px; cursor:pointer; box-shadow:var(--shadow); }
+  .check-btn[disabled] { opacity:.6; cursor:default; }
+  .toast { padding:12px 16px; font-size:14px; }
+  .muted-ico { color:var(--muted); display:inline-flex; }
+  header { display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
   .error { background:var(--crit-bg); color:var(--crit-t); border-radius:16px; padding:16px; font-size:15px; }
 </style>
 </head>
 <body>
-<main id="app">
-  <div>
-    <h1>Meine Apps</h1>
-    <p class="sub" id="checked">Wird geladen …</p>
-  </div>
-  <div id="content"></div>
+<main>
+  <header>
+    <div>
+      <h1>Meine Apps</h1>
+      <p class="sub" id="checked">Wird geladen …</p>
+    </div>
+    <button class="check-btn" id="checkNow" type="button" aria-label="Alle Apps jetzt auf Erreichbarkeit prüfen">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
+      Jetzt prüfen
+    </button>
+  </header>
+  <div id="toast" aria-live="polite"></div>
+  <div id="content" style="display:flex;flex-direction:column;gap:14px"></div>
 </main>
 <script>
-const COLORS = { ok:'var(--ok)', warn:'var(--warn)', crit:'var(--crit)', off:'var(--off)' };
-const TEXT = { ok:'var(--ok-t)', warn:'var(--warn-t)', crit:'var(--crit-t)', off:'var(--muted)' };
+const C = { ok:'var(--ok)', warn:'var(--warn)', crit:'var(--crit)', off:'var(--off)' };
+const T = { ok:'var(--ok-t)', warn:'var(--warn-t)', crit:'var(--crit-t)', off:'var(--muted)' };
+const BG = { ok:'var(--ok-bg)', warn:'var(--warn-bg)', crit:'var(--crit-bg)', off:'var(--soft)' };
 const RANK = { off:0, ok:1, warn:2, crit:3 };
+const openApps = new Set();
+const live = {}; // Ergebnis von „Jetzt prüfen“ je App
+let lastData = null;
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
-
-function ago(iso) {
-  const d = new Date(iso), min = Math.round((Date.now() - d) / 60000);
-  const time = d.toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' });
-  const day = d.toDateString() === new Date().toDateString() ? 'heute' : d.toLocaleDateString('de-DE', { weekday:'short', day:'numeric', month:'numeric' });
-  return { text: `Zuletzt geprüft: ${day}, ${time} Uhr`, stale: min > 150 };
-}
+const de = n => String(n).replace('.', ',');
+const num = n => Math.round(n).toLocaleString('de-DE');
+const levelOf = (p, t) => p >= (t?.crit ?? 90) ? 'crit' : p >= (t?.warn ?? 70) ? 'warn' : 'ok';
 
 function rel(iso) {
-  if (!iso) return 'noch keiner';
+  if (!iso) return null;
   const min = Math.round((Date.now() - new Date(iso)) / 60000);
   if (min < 2) return 'gerade eben';
   if (min < 60) return `vor ${min} Min.`;
@@ -87,80 +146,164 @@ function rel(iso) {
   const d = Math.round(h / 24);
   return d === 1 ? 'gestern' : `vor ${d} Tagen`;
 }
-const de = n => String(n).replace('.', ',');
-function statsHtml(app) {
-  const st = [];
-  if (app.visits) {
-    st.push(['Letzter Besuch', rel(app.visits.lastVisit)]);
-    st.push(['Aufrufe heute', app.visits.today.toLocaleString('de-DE')]);
-    st.push(['Aufrufe 7 Tage', app.visits.week.toLocaleString('de-DE')]);
+const ICONS = {
+  ok: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  warn: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l9 16H3z"/><path d="M12 10v4"/><path d="M12 17.5h.01"/></svg>',
+  crit: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><path d="M12 16.5h.01"/></svg>'
+};
+const CHEV = '<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+
+function spark(days) {
+  if (!days || !days.length) return '<span class="spark" aria-hidden="true"></span>';
+  const max = Math.max(1, ...days), w = 64, h = 28, bw = 6, gap = (w - bw * days.length) / (days.length - 1);
+  const bars = days.map((v, i) => {
+    const bh = v ? Math.max(3, Math.round((v / max) * (h - 2))) : 2;
+    return `<rect x="${(i * (bw + gap)).toFixed(1)}" y="${h - bh}" width="${bw}" height="${bh}" rx="2" fill="${i === days.length - 1 ? 'var(--accent)' : 'var(--line)'}"/>`;
+  }).join('');
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" role="img" aria-label="Aufrufe der letzten 7 Tage: ${days.join(', ')}">${bars}</svg>`;
+}
+function meter(prov, label, used, limit, text, reset, th) {
+  const p = limit ? (used / limit) * 100 : 0, lv = levelOf(p, th);
+  return `<div class="qrow">
+    <div class="qhead"><span>${prov ? `<span class="qprov">${esc(prov)}</span><br>` : ''}${esc(label)}</span><span style="${lv !== 'ok' ? `color:${T[lv]};font-weight:600` : ''}">${esc(text || `${num(used)} / ${num(limit)}`)}</span></div>
+    <div class="track" role="progressbar" aria-label="${esc(label)}" aria-valuenow="${Math.round(p)}" aria-valuemin="0" aria-valuemax="100"><div class="fill" style="width:${Math.min(100, p).toFixed(1)}%;background:${C[lv]}"></div></div>
+    ${reset ? `<span class="hint">${Math.round(p)} % genutzt · ${esc(reset)}</span>` : ''}
+  </div>`;
+}
+
+const BELL_OFF = '<span class="muted-ico" title="Meldungen stumm"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Meldungen stumm"><path d="M13.7 21a2 2 0 0 1-3.4 0"/><path d="M18 8a6 6 0 0 0-9.3-5"/><path d="M6.3 6.3A6 6 0 0 0 6 8c0 7-3 9-3 9h14"/><path d="M3 3l18 18"/></svg></span>';
+function calendar(days) {
+  if (!days || !days.length) return '';
+  const map = Object.fromEntries(days.map(x => [x.d, x.pct]));
+  const cells = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(Date.now() - i * 864e5).toLocaleDateString('sv-SE', { timeZone: 'Europe/Berlin' });
+    const p = map[d];
+    const col = p == null ? 'var(--soft)' : p >= 99.5 ? 'var(--ok)' : p >= 90 ? 'var(--warn)' : 'var(--crit)';
+    const label = `${new Date(d).toLocaleDateString('de-DE', { day: 'numeric', month: 'numeric' })}: ${p == null ? 'keine Daten' : de(p) + ' % erreichbar'}`;
+    cells.push(`<i style="background:${col}" title="${label}"></i>`);
   }
-  if (app.uptime != null) st.push(['Erreichbar (30 Tage)', de(app.uptime) + ' %']);
-  if (app.ms != null) st.push(['Ladezeit', de((app.ms / 1000).toFixed(1)) + ' s']);
-  if (!st.length) return '';
-  return `<div class="stats">${st.map(([k, v]) => `<div class="stat"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('')}</div>`;
+  return `<div style="display:flex;flex-direction:column;gap:6px"><span class="hint">Erreichbarkeit der letzten 30 Tage (ein Kästchen pro Tag)</span><div class="cal" role="img" aria-label="Erreichbarkeit der letzten 30 Tage">${cells.join('')}</div><div class="cal-legend hint"><span>vor 30 Tagen</span><span>heute</span></div></div>`;
+}
+const peak = hours => { if (!hours || !hours.some(Boolean)) return null; const h = hours.indexOf(Math.max(...hours)); return `${h}–${(h + 1) % 24} Uhr`; };
+function hoursChart(hours) {
+  if (!hours || !hours.some(Boolean)) return '';
+  const max = Math.max(...hours);
+  return `<h2 class="sec-title">Wann ist am meisten los?</h2>
+  <section class="card" style="padding:16px;display:flex;flex-direction:column;gap:6px">
+    <span style="font-size:15px">Die meisten Aufrufe: <b>${esc(peak(hours))}</b></span>
+    <div class="hours" role="img" aria-label="Aufrufe nach Uhrzeit, letzte 7 Tage">${hours.map((n, i) => `<i style="height:${Math.max(2, Math.round(n / max * 76))}px" title="${i} Uhr: ${n} Aufrufe"></i>`).join('')}</div>
+    <div class="hours-axis"><span>0 Uhr</span><span>6</span><span>12</span><span>18</span><span>23</span></div>
+    <span class="hint">Alle Apps zusammen, letzte 7 Tage</span>
+  </section>`;
 }
 
 function render(s) {
-  const a = ago(s.checkedAt);
-  document.getElementById('checked').textContent = a.text + (a.stale ? ' – das ist schon länger her!' : '');
-  const apps = s.apps.slice().sort((x, y) => RANK[y.level] - RANK[x.level]);
-  const bad = apps.filter(x => x.level === 'warn' || x.level === 'crit').length + (a.stale ? 1 : 0);
-  const anyCrit = apps.some(x => x.level === 'crit') || a.stale;
-  const summary = bad === 0
-    ? `<div class="summary s-ok"><b>Alles läuft gut</b><span>Du musst nichts tun.</span></div>`
-    : `<div class="summary ${anyCrit ? 's-crit' : 's-warn'}"><b>${bad === 1 ? '1 Ding braucht' : bad + ' Dinge brauchen'} dich</b><span>${bad < apps.length ? 'Alles andere läuft gut.' : 'Schau dir die Karten unten an.'}</span></div>`;
+  lastData = s;
+  const th = s.thresholds;
+  const stale = (Date.now() - new Date(s.checkedAt)) / 60000 > 150;
+  document.getElementById('checked').textContent = `Geprüft ${rel(s.checkedAt)}` + (stale ? ' – das ist zu lange her!' : ' · prüft stündlich');
 
-  const barHtml = b => `
-      <div class="meter">
-        <div class="row"><span>${esc(b.label)}</span><span style="color:${b.level==='ok'?'var(--muted)':TEXT[b.level]};font-weight:${b.level==='ok'?400:600}">${esc(b.text)}</span></div>
-        <div class="track"><div class="fill" style="width:${Math.max(1, Math.min(100, b.pct))}%;background:${COLORS[b.level]}"></div></div>
-        ${b.sub ? `<div class="hint">${esc(b.sub)}</div>` : ''}
-      </div>`;
-  const cards = apps.map(app => {
-    const groups = (app.providers || []).map(p => {
-      const bars = (app.bars || []).filter(b => b.provider === p).map(barHtml).join('');
-      const facts = (app.facts || []).filter(f => f.provider === p).map(f => `<div class="hint">${esc(f.text)}${f.link ? ` <a href="${esc(f.link)}" target="_blank" rel="noopener">${esc(f.linkText || 'Öffnen')}</a>` : ''}</div>`).join('');
-      return `<div class="provider"><div class="pname">${esc(p)}</div>${bars}${facts}</div>`;
-    }).join('');
-    const notes = (app.notes || []).map(n => `<div class="hint" style="color:var(--crit-t)">Fehler: ${esc(n)}</div>`).join('');
-    return `
-    <section class="card">
-      <div class="head">
-        <span class="dot" aria-hidden="true" style="background:${COLORS[app.level]}"></span>
-        <span class="name">${esc(app.name)}</span>
-        <span class="label" style="color:${TEXT[app.level]}">${esc(app.label)}</span>
+  const apps = s.apps.slice().sort((a, b) => (RANK[b.level] - RANK[a.level]) || (new Date(b.visits?.lastVisit || 0) - new Date(a.visits?.lastVisit || 0)));
+  const issues = apps.filter(a => a.level === 'warn' || a.level === 'crit');
+  const worst = stale ? 'crit' : issues.length ? (issues.some(a => a.level === 'crit') ? 'crit' : 'warn') : 'ok';
+  const visitsToday = apps.reduce((n, a) => n + (a.visits?.today || 0), 0);
+  const lastApp = apps.filter(a => a.visits?.lastVisit).sort((a, b) => new Date(b.visits.lastVisit) - new Date(a.visits.lastVisit))[0];
+  const title = worst === 'ok' ? 'Alles läuft' : issues.length === 1 ? '1 App braucht dich' : issues.length > 1 ? `${issues.length} Apps brauchen dich` : 'Monitor prüft nicht mehr';
+  const subtitle = worst === 'ok' ? `${apps.length} Apps online · du musst nichts tun` : stale && !issues.length ? 'Sag Claude Bescheid.' : 'Was zu tun ist, steht direkt darunter.';
+
+  const hero = `<section class="card hero" aria-label="Gesamtstatus">
+    <div class="hero-top">
+      <div class="hero-icon" style="background:${BG[worst]};color:${T[worst]}">${ICONS[worst]}</div>
+      <div><h2>${esc(title)}</h2><p>${esc(subtitle)}</p></div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><span>Apps online</span><b>${apps.filter(a => a.level !== 'crit').length} / ${apps.length}</b></div>
+      <div class="kpi"><span>Aufrufe heute</span><b>${num(visitsToday)}</b></div>
+      <div class="kpi"><span>Letzter Besuch</span><b>${lastApp ? esc(rel(lastApp.visits.lastVisit).replace(/^vor /, '')) : '–'}</b></div>
+    </div>
+    ${lastApp ? `<span class="hint" style="margin-top:-6px">Zuletzt besucht: ${esc(lastApp.name)}</span>` : ''}
+  </section>`;
+
+  const alerts = issues.map(a => `<section class="card alert" style="background:${BG[a.level]}">
+    <span class="dot" style="background:${C[a.level]}"></span>
+    <div><b style="color:${T[a.level]}">${esc(a.name)}: ${esc(a.label)}</b><p>${esc(a.text)}</p>${a.todo ? `<p class="todo">Was tun? ${esc(a.todo)}</p>` : ''}</div>
+  </section>`).join('');
+
+  const acc = s.account || {};
+  let quota = '';
+  if (acc.cloudflare) quota += meter('Cloudflare', 'Aufrufe heute (alle Apps zusammen)', acc.cloudflare.requests, acc.cloudflare.limit, null, acc.cloudflare.reset, th);
+  if (acc.durableObjects) {
+    const d = acc.durableObjects, L = d.limits;
+    quota += meter('Cloudflare · Kniffel-Spielräume', 'Anfragen heute', d.requests, L.requests, null, acc.cloudflare?.reset, th);
+    if (d.rowsWritten != null) quota += meter('', 'Gespeichert heute', d.rowsWritten, L.rowsWritten, null, null, th);
+    if (d.gbs != null) quota += meter('', 'Rechenzeit heute', d.gbs, L.gbs, `${num(d.gbs)} / ${num(L.gbs)} GB-s`, null, th);
+  }
+  const ghBars = apps.flatMap(a => (a.bars || []).filter(b => b.provider === 'GitHub').map(b => ({ ...b, app: a.name })));
+  if (ghBars.length) {
+    const top = ghBars.sort((a, b) => b.pct - a.pct)[0];
+    quota += meter('GitHub', `Speicherplatz – größte Seite: ${top.app}`, top.used, top.limit, top.text, null, th);
+  }
+  if (acc.firebaseUsage) quota += `<div class="qrow"><div class="qhead"><span><span class="qprov">Firebase · Weed!</span><br>Zahlen gibt es nur in der Firebase-Konsole</span></div><a href="${esc(acc.firebaseUsage)}" target="_blank" rel="noopener" style="font-size:14px;font-weight:600">Verbrauch in Firebase ansehen</a></div>`;
+  const quotaCard = quota ? `<h2 class="sec-title">Gratis-Kontingente</h2><section class="card quota">${quota}</section>` : '';
+
+  const rows = apps.map(a => {
+    const v = a.visits;
+    const sub = v ? (v.lastVisit ? `${rel(v.lastVisit)} · heute ${num(v.today)}` : 'noch kein Besuch gezählt') : (a.updatedText ? `Update ${a.updatedText}` : 'läuft');
+    const st = [];
+    if (v) st.push(['Aufrufe 7 Tage', num(v.week)]);
+    if (a.uptime != null) st.push(['Erreichbar (30 T.)', de(a.uptime) + ' %']);
+    if (a.ms != null) st.push(['Ladezeit', de((a.ms / 1000).toFixed(1)) + ' s']);
+    if (a.cfMine != null) st.push(['Cloudflare heute', num(a.cfMine) + ' Aufrufe']);
+    if (a.cfErrors != null) st.push(['Fehler heute', num(a.cfErrors)]);
+    if (a.updatedText) st.push(['Letztes Update', a.updatedText]);
+    if (peak(v?.hours)) st.push(['Meist genutzt', peak(v.hours)]);
+    if (a.muted) st.push(['Meldungen', a.muted === 'aus' ? 'stumm' : 'stumm bis ' + new Date(a.muted).toLocaleDateString('de-DE', { day: 'numeric', month: 'numeric' })]);
+    const ownBars = (a.bars || []).filter(b => b.provider !== 'GitHub' && !(b.provider === 'Cloudflare' && (b.label === 'Aufrufe heute' || b.label.startsWith('Spielräume'))));
+    const notes = (a.notes || []).map(n => `<span class="hint" style="color:var(--crit-t)">Fehler: ${esc(n)}</span>`).join('');
+    return `<details class="app" data-id="${esc(a.id)}" ${openApps.has(a.id) ? 'open' : ''}>
+      <summary>
+        <span class="avatar" aria-hidden="true">${esc([...a.name][0])}<i style="background:${C[a.level]}"></i></span>
+        <span class="app-main">
+          <span class="app-name">${esc(a.name)}${a.muted ? BELL_OFF : ''}${a.level !== 'ok' ? `<span class="badge" style="background:${BG[a.level]};color:${T[a.level]}">${esc(a.label)}</span>` : ''}${live[a.id] ? `<span class="live" style="background:${live[a.id].ok ? 'var(--ok-bg)' : 'var(--crit-bg)'};color:${live[a.id].ok ? 'var(--ok-t)' : 'var(--crit-t)'}">${live[a.id].ok ? 'jetzt erreichbar · ' + de((live[a.id].ms / 1000).toFixed(1)) + ' s' : 'jetzt nicht erreichbar'}</span>` : ''}</span>
+          <span class="app-sub">${esc(sub)}</span>
+        </span>
+        ${spark(v?.days)}
+        ${CHEV}
+      </summary>
+      <div class="app-body">
+        <p class="app-text">${esc(a.text)}</p>
+        ${st.length ? `<div class="stats">${st.map(([k, x]) => `<div class="stat"><span>${esc(k)}</span><b>${esc(x)}</b></div>`).join('')}</div>` : ''}
+        ${calendar(a.uptimeDays)}
+        ${ownBars.map(b => meter(b.provider, b.label, b.used, b.limit, b.text, b.reset, th)).join('')}
+        ${notes}
+        ${a.url ? `<a class="open-btn" href="${esc(a.url)}" target="_blank" rel="noopener">App öffnen</a>` : ''}
       </div>
-      <p class="text">${esc(app.text)}</p>
-      ${app.updatedText ? `<p class="todo">Letztes Update der App: ${esc(app.updatedText)}</p>` : ''}
-      ${statsHtml(app)}
-      ${app.todo ? `<p class="todo">Was tun? ${esc(app.todo)}</p>` : ''}
-      ${groups}
-      ${notes ? `<div class="details">${notes}</div>` : ''}
-    </section>`;
+    </details>`;
   }).join('');
 
-  const hist = (s.history || []).slice(0, 8).map(h => `
-    <div class="hist-item"><span class="dot" aria-hidden="true" style="width:10px;height:10px;background:${COLORS[h.level]}"></span>
-    <span>${esc(h.text)}</span><time>${new Date(h.t).toLocaleString('de-DE', { day:'numeric', month:'numeric', hour:'2-digit', minute:'2-digit' })}</time></div>`).join('');
+  const hist = (s.history || []).slice(0, 10).map(h => `<div class="hist"><span class="dot" style="background:${C[h.level]}"></span><span>${esc(h.text)}</span><time>${new Date(h.t).toLocaleString('de-DE', { day:'numeric', month:'numeric', hour:'2-digit', minute:'2-digit' })}</time></div>`).join('');
 
-  document.getElementById('content').outerHTML = `<div id="content" style="display:flex;flex-direction:column;gap:16px">
-    ${a.stale ? `<div class="error">Der Monitor selbst hat seit über 2 Stunden nicht geprüft. Sag Claude Bescheid.</div>` : ''}
-    ${summary}${cards}
-    <div class="legend">
-      <b>So liest du die Farben</b>
-      <div><i style="background:var(--ok)"></i>Grün: alles gut</div>
-      <div><i style="background:var(--warn)"></i>Gelb: wird knapp (ab ${s.thresholds?.warn ?? 70} %)</div>
-      <div><i style="background:var(--crit)"></i>Rot: voll oder kaputt – du bekommst eine Push-Meldung</div>
-    </div>
-    <section class="card history" style="flex-direction:column"><b style="font-size:15px">Letzte Meldungen</b>${hist || '<span class="todo">Noch keine.</span>'}</section>
-    <a class="card" href="https://claude.ai/settings/usage" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;flex-direction:row;align-items:center;justify-content:space-between">
-      <span style="display:flex;flex-direction:column;gap:2px"><b style="font-size:16px">Claude-Verbrauch</b><span class="hint">5-Stunden- und Wochenlimit – öffnet deine Claude-Einstellungen</span></span>
-      <span aria-hidden="true" style="font-size:22px;color:var(--accent)">›</span>
-    </a>
-    <button class="link" id="toggle" aria-expanded="${document.body.classList.contains('show-details')}">${document.body.classList.contains('show-details') ? 'Meldungen ausblenden' : 'Letzte Meldungen anzeigen'}</button>
-  </div>`;
-  document.getElementById('toggle').onclick = () => { document.body.classList.toggle('show-details'); render(s); };
+  document.getElementById('content').innerHTML = `
+    ${stale ? `<div class="error">Der Monitor hat seit über 2 Stunden nicht geprüft. Sag Claude Bescheid.</div>` : ''}
+    ${hero}
+    ${alerts}
+    <h2 class="sec-title">Apps</h2>
+    <section class="card apps">${rows}</section>
+    ${quotaCard}
+    ${hoursChart(s.account?.hours)}
+    <h2 class="sec-title">Mehr</h2>
+    <section class="card foot">
+      <a class="row" href="https://claude.ai/settings/usage" target="_blank" rel="noopener"><span>Claude-Verbrauch ansehen</span>${CHEV}</a>
+      <details><summary><span>Letzte Meldungen</span>${CHEV}</summary><div class="inner">${hist || '<span class="hint">Noch keine.</span>'}</div></details>
+      <details><summary><span>So liest du die Anzeige</span>${CHEV}</summary><div class="inner">
+        <div class="hist"><span class="dot" style="background:var(--ok)"></span><span>Grün: alles gut</span></div>
+        <div class="hist"><span class="dot" style="background:var(--warn)"></span><span>Gelb: wird knapp (ab ${th?.warn ?? 70} %) oder lädt langsam</span></div>
+        <div class="hist"><span class="dot" style="background:var(--crit)"></span><span>Rot: voll oder nicht erreichbar – du bekommst sofort eine Push-Meldung</span></div>
+        <span class="hint">Die kleinen Balken neben jeder App zeigen die Aufrufe der letzten 7 Tage, der blaue ist heute. Tippe auf eine App für Details. „Jetzt prüfen“ testet sofort von deinem Handy aus, ob alle Apps erreichbar sind – der Verbrauch wird weiter stündlich aktualisiert. Das durchgestrichene Glöckchen heißt: Meldungen für diese App sind stumm. Jeden Sonntag gegen 19 Uhr kommt ein Wochenbericht.</span>
+      </div></details>
+    </section>`;
+  document.querySelectorAll('details.app').forEach(d => d.addEventListener('toggle', () => { d.open ? openApps.add(d.dataset.id) : openApps.delete(d.dataset.id); }));
 }
 
 async function load() {
@@ -173,6 +316,23 @@ async function load() {
     document.getElementById('content').innerHTML = '<div class="error">Noch keine Daten. Die erste Prüfung läuft gleich – schau in ein paar Minuten wieder rein.</div>';
   }
 }
+async function checkNow() {
+  const btn = document.getElementById('checkNow'), toast = document.getElementById('toast');
+  if (!lastData) return;
+  btn.disabled = true; btn.lastChild.textContent = ' Prüfe …';
+  await Promise.all(lastData.apps.filter(a => a.url).map(async a => {
+    const t0 = performance.now();
+    try {
+      await fetch(a.url + (a.url.includes('?') ? '&' : '?') + 'monitor=' + Date.now(), { mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(12000) });
+      live[a.id] = { ok: true, ms: performance.now() - t0 };
+    } catch { live[a.id] = { ok: false }; }
+  }));
+  const bad = lastData.apps.filter(a => live[a.id] && !live[a.id].ok);
+  toast.innerHTML = `<section class="card toast" style="background:${bad.length ? 'var(--crit-bg)' : 'var(--ok-bg)'};color:${bad.length ? 'var(--crit-t)' : 'var(--ok-t)'}">${bad.length ? `Nicht erreichbar: ${bad.map(a => esc(a.name)).join(', ')}` : `Gerade geprüft: alle ${lastData.apps.length} Apps sind erreichbar.`}</section>`;
+  btn.disabled = false; btn.lastChild.textContent = ' Jetzt prüfen';
+  render(lastData);
+}
+document.getElementById('checkNow').addEventListener('click', checkNow);
 load();
 setInterval(load, 5 * 60 * 1000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });

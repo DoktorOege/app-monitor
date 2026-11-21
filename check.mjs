@@ -146,8 +146,17 @@ function visitStats(rows, v) {
   const mine = rows.filter(x => x.host === v.host && x.path.startsWith(v.path));
   const today = berlinDay();
   let last = null, todayN = 0, weekN = 0;
-  for (const x of mine) { weekN += x.n; if (berlinDay(x.t) === today) todayN += x.n; if (!last || x.t > last) last = x.t; }
-  return { lastVisit: last ? last.toISOString() : null, today: todayN, week: weekN };
+  const dayKeys = [...Array(7)].map((_, i) => berlinDay(new Date(now.getTime() - (6 - i) * 864e5)));
+  const days = dayKeys.map(() => 0);
+  const hours = Array(24).fill(0);
+  for (const x of mine) {
+    hours[partsIn('Europe/Berlin', x.t).h] += x.n;
+    weekN += x.n; const k = berlinDay(x.t);
+    if (k === today) todayN += x.n;
+    const i = dayKeys.indexOf(k); if (i >= 0) days[i] += x.n;
+    if (!last || x.t > last) last = x.t;
+  }
+  return { lastVisit: last ? last.toISOString() : null, today: todayN, week: weekN, days, hours };
 }
 
 // ---------- Google Firestore ----------
@@ -227,6 +236,7 @@ async function checkApp(cfg, cf, rum, state, dob) {
   for (const k of Object.keys(up).sort().slice(0, -30)) delete up[k];
   const [okN, allN] = Object.values(up).reduce((s2, [o, t]) => [s2[0] + o, s2[1] + t], [0, 0]);
   app.uptime = allN ? Math.floor((okN / allN) * 1000) / 10 : null;
+  app.uptimeDays = Object.keys(up).sort().slice(-30).map(k => ({ d: k, pct: Math.round((up[k][0] / up[k][1]) * 1000) / 10 }));
   // langsam? (deutlich langsamer als sonst, zweimal hintereinander)
   const speeds = (state.speed[cfg.id] ||= []);
   const usual = median(speeds);
@@ -243,6 +253,7 @@ async function checkApp(cfg, cf, rum, state, dob) {
     app.providers.push('Cloudflare');
     if (cf) {
       const mine = cfg.cloudflare.script ? (cf.byScript[cfg.cloudflare.script] || 0) : null;
+      app.cfMine = mine;
       app.bars.push(bar('Cloudflare', 'Aufrufe heute', cf.total, LIMITS.cfRequests, {
         sub: (mine !== null ? `davon diese App: ${fmt(mine)} · ` : '') + 'Limit gilt für alle Cloudflare-Apps zusammen',
         reset: resetText('UTC')
@@ -332,7 +343,7 @@ async function checkApp(cfg, cf, rum, state, dob) {
     const full = b.pct >= 100;
     app.problems.push({
       level: b.level, label: full ? 'Voll' : b.level === 'crit' ? 'Fast voll' : 'Wird knapp',
-      text: `${b.provider}: ${b.label} – ${b.pct} % vom Gratis-Kontingent. ${b.reset || ''}`.trim(),
+      text: `${b.label.replace(/^Spielräume: /, 'Spielräume – ')} (${b.provider}): ${b.pct} % vom Gratis-Kontingent. ${b.reset || ''}`.trim(),
       todo: full ? 'Die App hakt bis zum Neustart. Melde dich, dann mache ich sie sparsamer.' : 'Nichts tun – nur wenn es öfter passiert, melde dich.'
     });
   }
@@ -388,7 +399,10 @@ const today = berlinDay();
 
 if (env.TEST_PUSH === 'true') await push('Test vom App-Monitor', 'Wenn du das liest, kommen die Warnungen auf deinem Handy an.', 3, ['white_check_mark']);
 
+const muteOf = id => { const c = config.find(x => x.id === id) || {}; if (c.muted) return 'aus'; if (c.mutedUntil && c.mutedUntil >= today) return c.mutedUntil; return null; };
+for (const a of apps) { const m = muteOf(a.id); if (m) a.muted = m; }
 for (const a of apps) {
+  if (a.muted) continue; // Meldungen für diese App stumm geschaltet
   const told = state.notified[a.id] || 'ok';
   const log = text => history.unshift({ t: now.toISOString(), id: a.id, level: a.level, text });
   const msg = `${a.text}\n${a.todo || ''}`.trim();
@@ -420,6 +434,13 @@ if ((isSunday && bp.h >= 19 && state.weeklyDay !== today) || env.TEST_WEEKLY ===
   if (await push('Wochenbericht deiner Apps', lines.join('\n'), 2, ['bar_chart']) && env.TEST_WEEKLY !== 'true') state.weeklyDay = today;
 }
 
-const out = { checkedAt: now.toISOString(), thresholds: { warn: WARN, crit: CRIT }, apps, state, history: history.slice(0, 15) };
+const account = {
+  cloudflare: cf ? { requests: cf.total, limit: LIMITS.cfRequests, reset: resetText('UTC') } : null,
+  durableObjects: dob ? { requests: dob.requests, rowsWritten: dob.rowsWritten, rowsRead: dob.rowsRead, gbs: dob.gbs,
+    limits: { requests: LIMITS.doRequests, rowsWritten: LIMITS.doRowsWritten, rowsRead: LIMITS.doRowsRead, gbs: LIMITS.doGbs } } : null,
+  firebaseUsage: 'https://console.firebase.google.com/project/weed-online-kma/firestore/usage',
+  hours: apps.reduce((h, a) => (a.visits?.hours || []).reduce((acc, n, i) => { acc[i] += n; return acc; }, h), Array(24).fill(0))
+};
+const out = { checkedAt: now.toISOString(), account, thresholds: { warn: WARN, crit: CRIT }, apps, state, history: history.slice(0, 15) };
 await writeFile('status.json', JSON.stringify(out, null, 1) + '\n');
 console.log(apps.map(a => `${a.name}: ${a.level} – ${a.text}${a.notes?.length ? ' [' + a.notes.join(' | ') + ']' : ''}`).join('\n'));
