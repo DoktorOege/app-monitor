@@ -18,6 +18,10 @@ const LIMITS = {
   cfRequests: 100000,  // Cloudflare Workers, pro Tag, ganzes Konto
   kvReads: 100000,     // Cloudflare KV, pro Tag
   kvWrites: 1000,      // Cloudflare KV, pro Tag
+  doRequests: 100000,  // Durable Objects, pro Tag
+  doRowsRead: 5000000,
+  doRowsWritten: 100000,
+  doGbs: 13000,        // Durable Objects Rechenzeit (GB-Sekunden), pro Tag
   fsReads: 50000,      // Firestore, pro Tag
   fsWrites: 20000,
   fsDeletes: 20000,
@@ -89,6 +93,36 @@ async function cloudflare() {
     else if (['write', 'delete', 'list'].includes(t)) kv.write += row.sum?.requests || 0; // zählen alle gegen das 1.000er-Limit
   }
   return { total, byScript, errByScript, kv };
+}
+
+// ---------- Durable Objects (z. B. Kniffel-Spielräume), ganzes Konto ----------
+async function durableObjects() {
+  if (!env.CF_API_TOKEN) return null;
+  const since = startOfDay('UTC').toISOString();
+  const variants = [
+    'inv:durableObjectsInvocationsAdaptiveGroups(limit:1000,filter:{datetime_geq:$since,datetime_leq:$until}){sum{requests}} per:durableObjectsPeriodicGroups(limit:1000,filter:{datetime_geq:$since,datetime_leq:$until}){sum{activeTime rowsRead rowsWritten}}',
+    'inv:durableObjectsInvocationsAdaptiveGroups(limit:1000,filter:{datetime_geq:$since,datetime_leq:$until}){sum{requests}} per:durableObjectsPeriodicGroups(limit:1000,filter:{datetime_geq:$since,datetime_leq:$until}){sum{activeTime}}',
+    'inv:durableObjectsInvocationsAdaptiveGroups(limit:1000,filter:{datetime_geq:$since,datetime_leq:$until}){sum{requests}}'
+  ];
+  let lastErr = '';
+  for (const body of variants) {
+    const r = await get('https://api.cloudflare.com/client/v4/graphql', {
+      method: 'POST',
+      headers: { authorization: `Bearer ${env.CF_API_TOKEN.trim()}`, 'content-type': 'application/json' },
+      body: JSON.stringify({ query: `query($acc:String!,$since:Time!,$until:Time!){viewer{accounts(filter:{accountTag:$acc}){${body}}}}`, variables: { acc: CF_ACCOUNT_ID, since, until: now.toISOString() } })
+    });
+    const j = await r.json();
+    const acc = j.data?.viewer?.accounts?.[0];
+    if (!acc) { lastErr = (j.errors || []).map(e => e.message).join('; '); continue; }
+    const sum = (rows, f) => (rows || []).reduce((n, x) => n + (x.sum?.[f] || 0), 0);
+    return {
+      requests: sum(acc.inv, 'requests'),
+      gbs: acc.per ? sum(acc.per, 'activeTime') / 1e6 * 0.125 : null,
+      rowsRead: acc.per && acc.per[0]?.sum && 'rowsRead' in acc.per[0].sum ? sum(acc.per, 'rowsRead') : null,
+      rowsWritten: acc.per && acc.per[0]?.sum && 'rowsWritten' in acc.per[0].sum ? sum(acc.per, 'rowsWritten') : null
+    };
+  }
+  throw new Error('Durable Objects: ' + lastErr);
 }
 
 // ---------- Besucher (Cloudflare Web Analytics, ohne Cookies) ----------
@@ -179,7 +213,7 @@ function whenText(d) {
 }
 
 // ---------- Eine App prüfen ----------
-async function checkApp(cfg, cf, rum, state) {
+async function checkApp(cfg, cf, rum, state, dob) {
   const app = { id: cfg.id, name: cfg.name, url: cfg.url, providers: [], bars: [], facts: [], notes: [], problems: [] };
   const note = e => app.notes.push(String(e.message || e));
 
@@ -219,6 +253,13 @@ async function checkApp(cfg, cf, rum, state) {
         if (errs >= 5 && mine && errs / mine > 0.1) app.problems.push({ level: 'warn', label: 'Fehler im Server-Baustein', text: `Heute sind ${fmt(errs)} von ${fmt(mine)} Aufrufen bei Cloudflare mit Fehler abgebrochen.`, todo: 'Melde dich bei Claude – dann schauen wir in die Cloudflare-Logs.' });
         app.facts.push({ provider: 'Cloudflare', text: `Fehler heute: ${fmt(errs)}` });
       }
+      if (cfg.cloudflare.durableObjects && dob) {
+        const reset = resetText('UTC');
+        app.bars.push(bar('Cloudflare', 'Spielräume: Anfragen heute', dob.requests, LIMITS.doRequests, { reset }));
+        if (dob.rowsWritten != null) app.bars.push(bar('Cloudflare', 'Spielräume: gespeichert heute', dob.rowsWritten, LIMITS.doRowsWritten, { reset }));
+        if (dob.rowsRead != null) app.bars.push(bar('Cloudflare', 'Spielräume: gelesen heute', dob.rowsRead, LIMITS.doRowsRead, { reset }));
+        if (dob.gbs != null) app.bars.push(bar('Cloudflare', 'Spielräume: Rechenzeit heute', dob.gbs, LIMITS.doGbs, { reset, text: `${fmt(dob.gbs)} / ${fmt(LIMITS.doGbs)} GB-s` }));
+      }
       if (cfg.cloudflare.kv) {
         app.bars.push(bar('Cloudflare', 'Speicher gelesen heute', cf.kv.read, LIMITS.kvReads, { reset: resetText('UTC') }));
         app.bars.push(bar('Cloudflare', 'Speicher beschrieben heute', cf.kv.write, LIMITS.kvWrites, { reset: resetText('UTC') }));
@@ -254,7 +295,10 @@ async function checkApp(cfg, cf, rum, state) {
 
   if (cfg.versionUrl) { // z. B. {"v":"14.11.2026, 02:16 Uhr"}
     try {
-      const v = (await (await get(cfg.versionUrl + '?t=' + Date.now())).json()).v || '';
+      const vj = await (await get(cfg.versionUrl + '?t=' + Date.now())).json();
+      const v = vj.v || '';
+      const iso = String(vj.version || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (iso && !v) app.versionDay = `${+iso[3]}.${+iso[2]}.${iso[1]}`;
       const m = String(v).match(/(\d{1,2})\.(\d{1,2})\.(\d{4}),?\s*(\d{1,2}):(\d{2})/);
       if (m) {
         const guess = Date.UTC(+m[3], m[2] - 1, +m[1], +m[4], +m[5]);
@@ -266,7 +310,7 @@ async function checkApp(cfg, cf, rum, state) {
 
   if (cfg.pushCheck) {
     let ok = false;
-    try { const r = await get(cfg.pushCheck); ok = r.ok && (await r.json()).ok === true; } catch { /* bleibt false */ }
+    try { const r = await get(cfg.pushCheck); const pj = await r.json(); ok = r.ok && (pj.ok === true || !!pj.pub); } catch { /* bleibt false */ }
     if (!ok) app.problems.push({ level: 'warn', label: 'Push gestört', text: 'Die App läuft, aber „Du bist dran“-Meldungen gehen gerade nicht raus.', todo: 'Melde dich bei Claude – vermutlich fehlt der Push-Schlüssel bei Cloudflare.' });
   }
 
@@ -322,13 +366,16 @@ const history = old.history || [];
 let cf = null, cfError = null;
 if (config.some(a => a.cloudflare)) { try { cf = await cloudflare(); } catch (e) { cfError = String(e.message || e); } }
 
+let dob = null, dobError = null;
+if (config.some(a => a.cloudflare?.durableObjects)) { try { dob = await durableObjects(); } catch (e) { dobError = String(e.message || e); } }
 let rum = null, rumError = null;
 if (config.some(a => a.visits)) { try { rum = await visitors(); } catch (e) { rumError = String(e.message || e); } }
 
 const apps = [];
 for (const cfg of config) {
   try {
-    const a = await checkApp(cfg, cf, rum, state);
+    const a = await checkApp(cfg, cf, rum, state, dob);
+    if (dobError && cfg.cloudflare?.durableObjects) a.notes.push(dobError);
     if (rumError && cfg.visits) a.notes.push(rumError);
     if (cfError && cfg.cloudflare) a.notes.push(cfError);
     apps.push(a);

@@ -17,16 +17,6 @@
     }
   },
   {
-    "id": "tvm",
-    "name": "Meppen Basketball",
-    "url": "",
-    "cloudflare": {
-      "script": "",
-      "kv": true
-    },
-    "_hinweis": "Noch nicht online. Sobald die App läuft: url eintragen (und bei Bedarf visits/cloudflare), dann erscheint sie automatisch."
-  },
-  {
     "id": "nba",
     "name": "NBA Aktuell",
     "url": "https://doktoroege.github.io/nba-aktuell/",
@@ -50,5 +40,54 @@
       "host": "doktoroege.github.io",
       "path": "/container-scanner/"
     }
+  },
+  {
+    "id": "kniffel",
+    "name": "Kniffel",
+    "url": "https://kniffel.kma-online.workers.dev/",
+    "pushCheck": "https://kniffel.kma-online.workers.dev/api/vapid",
+    "cloudflare": {
+      "script": "kniffel",
+      "durableObjects": true
+    },
+    "visits": {
+      "host": "kniffel.kma-online.workers.dev",
+      "path": "/"
+    }
+  },
+  {
+    "id": "einmaleins",
+    "name": "1×1 Champion",
+    "url": "https://1x1.kma-online.workers.dev/",
+    "versionUrl": "https://1x1.kma-online.workers.dev/version.json",
+    "cloudflare": {
+      "script": "1x1"
+    },
+    "github": {
+      "repo": "DoktorOege/lern-champion"
+    },
+    "visits": {
+      "host": "1x1.kma-online.workers.dev",
+      "path": "/"
+    }
+  },
+  {
+    "id": "erdkunde",
+    "name": "Erdkunde-Finale",
+    "url": "https://erdkunde-finale.kma-online.workers.dev/",
+    "cloudflare": {
+      "script": "erdkunde-finale"
+    },
+    "_hinweis": "Von Hand hochgeladen, kein GitHub-Repo – daher keine Besucherzählung."
+  },
+  {
+    "id": "tvm",
+    "name": "Meppen Basketball",
+    "url": "",
+    "cloudflare": {
+      "script": "",
+      "kv": true
+    },
+    "_hinweis": "Noch nicht online. Sobald die App läuft: url eintragen (und bei Bedarf visits/cloudflare), dann erscheint sie automatisch."
   }
 ]
