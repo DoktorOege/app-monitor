@@ -1,17 +1,17 @@
 {
- "checkedAt": "2026-11-21T19:52:41.338Z",
+ "checkedAt": "2026-11-21T20:50:11.154Z",
  "account": {
   "discovered": [],
   "cloudflare": {
-   "requests": 181,
+   "requests": 189,
    "limit": 100000,
    "reset": "Startet um 1:00 Uhr neu."
   },
   "durableObjects": {
-   "requests": 714,
+   "requests": 717,
    "rowsWritten": 1142,
-   "rowsRead": 142,
-   "gbs": 0.892513,
+   "rowsRead": 145,
+   "gbs": 0.89884975,
    "limits": {
     "requests": 100000,
     "rowsWritten": 100000,
@@ -41,8 +41,8 @@
    74,
    47,
    66,
-   76,
-   179,
+   79,
+   163,
    84,
    31
   ]
@@ -65,13 +65,13 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 181,
+     "used": 189,
      "limit": 100000,
-     "text": "181 / 100.000",
+     "text": "189 / 100.000",
      "pct": 0,
      "level": "ok",
      "shared": true,
-     "sub": "davon diese App: 44 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 49 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     }
    ],
@@ -88,7 +88,7 @@
     }
    ],
    "notes": [],
-   "ms": 334,
+   "ms": 333,
    "uptime": 100,
    "uptimeDays": [
     {
@@ -124,11 +124,11 @@
      "pct": 100
     }
    ],
-   "usualMs": 341,
+   "usualMs": 334,
    "visits": {
-    "lastVisit": "2026-11-21T19:49:00.000Z",
-    "today": 60,
-    "week": 856,
+    "lastVisit": "2026-11-21T20:21:00.000Z",
+    "today": 68,
+    "week": 862,
     "days": [
      36,
      227,
@@ -136,7 +136,7 @@
      124,
      133,
      140,
-     60
+     68
     ],
     "hours": [
      16,
@@ -159,13 +159,13 @@
      57,
      38,
      61,
-     75,
-     158,
+     78,
+     161,
      73,
      20
     ]
    },
-   "cfMine": 44,
+   "cfMine": 49,
    "cfErrors": 0,
    "updated": "2026-11-21T17:37:00.000Z",
    "updatedText": "heute, 18:37 Uhr",
@@ -186,21 +186,21 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 181,
+     "used": 189,
      "limit": 100000,
-     "text": "181 / 100.000",
+     "text": "189 / 100.000",
      "pct": 0,
      "level": "ok",
      "shared": true,
-     "sub": "davon diese App: 110 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 111 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     },
     {
      "provider": "Cloudflare",
      "label": "Spielräume (alle Spiele): Anfragen heute",
-     "used": 714,
+     "used": 717,
      "limit": 100000,
-     "text": "714 / 100.000",
+     "text": "717 / 100.000",
      "pct": 1,
      "level": "ok",
      "shared": true,
@@ -220,9 +220,9 @@
     {
      "provider": "Cloudflare",
      "label": "Spielräume (alle Spiele): gelesen heute",
-     "used": 142,
+     "used": 145,
      "limit": 5000000,
-     "text": "142 / 5.000.000",
+     "text": "145 / 5.000.000",
      "pct": 0,
      "level": "ok",
      "shared": true,
@@ -231,7 +231,7 @@
     {
      "provider": "Cloudflare",
      "label": "Spielräume (alle Spiele): Rechenzeit heute",
-     "used": 0.892513,
+     "used": 0.89884975,
      "limit": 13000,
      "text": "1 / 13.000 GB-s",
      "pct": 0,
@@ -247,7 +247,7 @@
     }
    ],
    "notes": [],
-   "ms": 140,
+   "ms": 80,
    "uptime": 100,
    "uptimeDays": [
     {
@@ -255,7 +255,7 @@
      "pct": 100
     }
    ],
-   "usualMs": 138,
+   "usualMs": 140,
    "visits": {
     "lastVisit": null,
     "today": 0,
@@ -296,7 +296,7 @@
      0
     ]
    },
-   "cfMine": 110,
+   "cfMine": 111,
    "cfErrors": 0,
    "updatedText": null,
    "level": "ok",
@@ -316,21 +316,21 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 181,
+     "used": 189,
      "limit": 100000,
-     "text": "181 / 100.000",
+     "text": "189 / 100.000",
      "pct": 0,
      "level": "ok",
      "shared": true,
-     "sub": "davon diese App: 19 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 20 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     },
     {
      "provider": "Cloudflare",
      "label": "Spielräume (alle Spiele): Anfragen heute",
-     "used": 714,
+     "used": 717,
      "limit": 100000,
-     "text": "714 / 100.000",
+     "text": "717 / 100.000",
      "pct": 1,
      "level": "ok",
      "shared": true,
@@ -350,9 +350,9 @@
     {
      "provider": "Cloudflare",
      "label": "Spielräume (alle Spiele): gelesen heute",
-     "used": 142,
+     "used": 145,
      "limit": 5000000,
-     "text": "142 / 5.000.000",
+     "text": "145 / 5.000.000",
      "pct": 0,
      "level": "ok",
      "shared": true,
@@ -361,7 +361,7 @@
     {
      "provider": "Cloudflare",
      "label": "Spielräume (alle Spiele): Rechenzeit heute",
-     "used": 0.892513,
+     "used": 0.89884975,
      "limit": 13000,
      "text": "1 / 13.000 GB-s",
      "pct": 0,
@@ -377,7 +377,7 @@
     }
    ],
    "notes": [],
-   "ms": 122,
+   "ms": 75,
    "uptime": 100,
    "uptimeDays": [
     {
@@ -426,7 +426,7 @@
      0
     ]
    },
-   "cfMine": 19,
+   "cfMine": 20,
    "cfErrors": 0,
    "updatedText": null,
    "level": "ok",
@@ -446,21 +446,21 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 181,
+     "used": 189,
      "limit": 100000,
-     "text": "181 / 100.000",
+     "text": "189 / 100.000",
      "pct": 0,
      "level": "ok",
      "shared": true,
-     "sub": "davon diese App: 8 · Limit gilt für alle Cloudflare-Apps zusammen",
+     "sub": "davon diese App: 9 · Limit gilt für alle Cloudflare-Apps zusammen",
      "reset": "Startet um 1:00 Uhr neu."
     },
     {
      "provider": "Cloudflare",
      "label": "Spielräume (alle Spiele): Anfragen heute",
-     "used": 714,
+     "used": 717,
      "limit": 100000,
-     "text": "714 / 100.000",
+     "text": "717 / 100.000",
      "pct": 1,
      "level": "ok",
      "shared": true,
@@ -480,9 +480,9 @@
     {
      "provider": "Cloudflare",
      "label": "Spielräume (alle Spiele): gelesen heute",
-     "used": 142,
+     "used": 145,
      "limit": 5000000,
-     "text": "142 / 5.000.000",
+     "text": "145 / 5.000.000",
      "pct": 0,
      "level": "ok",
      "shared": true,
@@ -491,7 +491,7 @@
     {
      "provider": "Cloudflare",
      "label": "Spielräume (alle Spiele): Rechenzeit heute",
-     "used": 0.892513,
+     "used": 0.89884975,
      "limit": 13000,
      "text": "1 / 13.000 GB-s",
      "pct": 0,
@@ -507,7 +507,7 @@
     }
    ],
    "notes": [],
-   "ms": 150,
+   "ms": 82,
    "uptime": 100,
    "uptimeDays": [
     {
@@ -556,7 +556,7 @@
      0
     ]
    },
-   "cfMine": 8,
+   "cfMine": 9,
    "cfErrors": 0,
    "updatedText": null,
    "level": "ok",
@@ -577,9 +577,9 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 181,
+     "used": 189,
      "limit": 100000,
-     "text": "181 / 100.000",
+     "text": "189 / 100.000",
      "pct": 0,
      "level": "ok",
      "shared": true,
@@ -603,7 +603,7 @@
     }
    ],
    "notes": [],
-   "ms": 122,
+   "ms": 137,
    "uptime": 100,
    "uptimeDays": [
     {
@@ -674,9 +674,9 @@
     {
      "provider": "Cloudflare",
      "label": "Aufrufe heute",
-     "used": 181,
+     "used": 189,
      "limit": 100000,
-     "text": "181 / 100.000",
+     "text": "189 / 100.000",
      "pct": 0,
      "level": "ok",
      "shared": true,
@@ -691,7 +691,7 @@
     }
    ],
    "notes": [],
-   "ms": 128,
+   "ms": 129,
    "uptime": 100,
    "uptimeDays": [
     {
@@ -699,7 +699,7 @@
      "pct": 100
     }
    ],
-   "usualMs": 126,
+   "usualMs": 128,
    "cfMine": 0,
    "cfErrors": 0,
    "updatedText": null,
@@ -729,7 +729,7 @@
    ],
    "facts": [],
    "notes": [],
-   "ms": 172,
+   "ms": 147,
    "uptime": 100,
    "uptimeDays": [
     {
@@ -769,7 +769,7 @@
    "visits": {
     "lastVisit": "2026-11-21T17:56:00.000Z",
     "today": 5,
-    "week": 182,
+    "week": 164,
     "days": [
      27,
      25,
@@ -801,7 +801,7 @@
      9,
      5,
      1,
-     20,
+     2,
      11,
      11
     ]
@@ -823,8 +823,8 @@
    "bars": [],
    "facts": [],
    "notes": [],
-   "ms": 81,
-   "uptime": 96.1,
+   "ms": 86,
+   "uptime": 95.5,
    "uptimeDays": [
     {
      "d": "2026-11-14",
@@ -856,14 +856,14 @@
     },
     {
      "d": "2026-11-21",
-     "pct": 75
+     "pct": 72
     }
    ],
    "usualMs": 105,
    "visits": {
-    "lastVisit": "2026-11-14T20:02:00.000Z",
+    "lastVisit": null,
     "today": 0,
-    "week": 1,
+    "week": 0,
     "days": [
      0,
      0,
@@ -895,7 +895,7 @@
      0,
      0,
      0,
-     1,
+     0,
      0,
      0
     ]
@@ -948,8 +948,8 @@
      21
     ],
     "2026-11-21": [
-     24,
-     24
+     25,
+     25
     ]
    },
    "nba": {
@@ -982,8 +982,8 @@
      21
     ],
     "2026-11-21": [
-     24,
-     24
+     25,
+     25
     ]
    },
    "container": {
@@ -1017,43 +1017,42 @@
     ],
     "2026-11-21": [
      18,
-     24
+     25
     ]
    },
    "kniffel": {
     "2026-11-21": [
-     10,
-     10
+     11,
+     11
     ]
    },
    "einmaleins": {
     "2026-11-21": [
-     10,
-     10
+     11,
+     11
     ]
    },
    "erdkunde": {
     "2026-11-21": [
-     10,
-     10
+     11,
+     11
     ]
    },
    "schiffe": {
     "2026-11-21": [
-     6,
-     6
+     7,
+     7
     ]
    },
    "kreuzquer": {
     "2026-11-21": [
-     6,
-     6
+     7,
+     7
     ]
    }
   },
   "speed": {
    "weed": [
-    457,
     682,
     741,
     538,
@@ -1100,10 +1099,10 @@
     276,
     385,
     466,
-    334
+    334,
+    333
    ],
    "nba": [
-    81,
     171,
     145,
     134,
@@ -1150,7 +1149,8 @@
     118,
     616,
     116,
-    172
+    172,
+    147
    ],
    "container": [
     76,
@@ -1212,7 +1212,8 @@
     149,
     138,
     133,
-    140
+    140,
+    80
    ],
    "einmaleins": [
     255,
@@ -1224,7 +1225,8 @@
     167,
     135,
     155,
-    122
+    122,
+    137
    ],
    "erdkunde": [
     326,
@@ -1236,7 +1238,8 @@
     150,
     126,
     131,
-    128
+    128,
+    129
    ],
    "schiffe": [
     184,
@@ -1244,7 +1247,8 @@
     114,
     185,
     155,
-    122
+    122,
+    75
    ],
    "kreuzquer": [
     229,
@@ -1252,7 +1256,8 @@
     150,
     187,
     141,
-    150
+    150,
+    82
    ]
   },
   "slow": {
