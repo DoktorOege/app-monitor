@@ -453,7 +453,7 @@ if ((isSunday && bp.h >= 19 && state.weeklyDay !== today) || env.TEST_WEEKLY ===
 // Neue, noch nicht eingetragene Cloudflare-Apps entdecken
 const allCfg = JSON.parse(await readFile('apps.json', 'utf8'));
 const known = new Set(allCfg.map(a => a.cloudflare?.script).filter(Boolean));
-const discovered = cf ? Object.entries(cf.byScript).filter(([n, c]) => n && n !== '?' && !known.has(n) && c > 0).map(([n, c]) => ({ script: n, url: `https://${n}.kma-online.workers.dev/`, requests: c })) : [];
+const discovered = cf ? Object.entries(cf.byScript).filter(([n, c]) => n && n !== '?' && !n.startsWith('__') && !known.has(n) && c > 0).map(([n, c]) => ({ script: n, url: `https://${n}.kma-online.workers.dev/`, requests: c })) : [];
 state.discoveredTold ||= {};
 for (const d of discovered) {
   if (!state.discoveredTold[d.script] && await push('Neue App entdeckt', `${d.script} läuft bei Cloudflare, ist aber noch nicht im Monitor. Sag Claude Bescheid, dann wird sie aufgenommen.`, 3, ['sparkles'])) state.discoveredTold[d.script] = today;
