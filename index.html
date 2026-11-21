@@ -204,12 +204,12 @@ function render(s) {
   const stale = (Date.now() - new Date(s.checkedAt)) / 60000 > 150;
   document.getElementById('checked').textContent = `Geprüft ${rel(s.checkedAt)}` + (stale ? ' – das ist zu lange her!' : ' · prüft stündlich');
 
-  const apps = s.apps.slice().sort((a, b) => (RANK[b.level] - RANK[a.level]) || (new Date(b.visits?.lastVisit || 0) - new Date(a.visits?.lastVisit || 0)));
-  const issues = apps.filter(a => a.level === 'warn' || a.level === 'crit');
+  const issues = s.apps.filter(a => a.level === 'warn' || a.level === 'crit').sort((a, b) => RANK[b.level] - RANK[a.level]);
+  const apps = s.apps.filter(a => !a.synthetic).sort((a, b) => (RANK[b.level] - RANK[a.level]) || (new Date(b.visits?.lastVisit || 0) - new Date(a.visits?.lastVisit || 0)));
   const worst = stale ? 'crit' : issues.length ? (issues.some(a => a.level === 'crit') ? 'crit' : 'warn') : 'ok';
   const visitsToday = apps.reduce((n, a) => n + (a.visits?.today || 0), 0);
   const lastApp = apps.filter(a => a.visits?.lastVisit).sort((a, b) => new Date(b.visits.lastVisit) - new Date(a.visits.lastVisit))[0];
-  const title = worst === 'ok' ? 'Alles läuft' : issues.length === 1 ? '1 App braucht dich' : issues.length > 1 ? `${issues.length} Apps brauchen dich` : 'Monitor prüft nicht mehr';
+  const title = worst === 'ok' ? 'Alles läuft' : issues.length === 1 ? '1 Sache braucht dich' : issues.length > 1 ? `${issues.length} Sachen brauchen dich` : 'Monitor prüft nicht mehr';
   const subtitle = worst === 'ok' ? `${apps.length} Apps online · du musst nichts tun` : stale && !issues.length ? 'Sag Claude Bescheid.' : 'Was zu tun ist, steht direkt darunter.';
 
   const hero = `<section class="card hero" aria-label="Gesamtstatus">
@@ -235,7 +235,7 @@ function render(s) {
   if (acc.cloudflare) quota += meter('Cloudflare', 'Aufrufe heute (alle Apps zusammen)', acc.cloudflare.requests, acc.cloudflare.limit, null, acc.cloudflare.reset, th);
   if (acc.durableObjects) {
     const d = acc.durableObjects, L = d.limits;
-    quota += meter('Cloudflare · Kniffel-Spielräume', 'Anfragen heute', d.requests, L.requests, null, acc.cloudflare?.reset, th);
+    quota += meter('Cloudflare · Spielräume der Online-Spiele', 'Anfragen heute', d.requests, L.requests, null, acc.cloudflare?.reset, th);
     if (d.rowsWritten != null) quota += meter('', 'Gespeichert heute', d.rowsWritten, L.rowsWritten, null, null, th);
     if (d.gbs != null) quota += meter('', 'Rechenzeit heute', d.gbs, L.gbs, `${num(d.gbs)} / ${num(L.gbs)} GB-s`, null, th);
   }
@@ -247,7 +247,7 @@ function render(s) {
   if (acc.firebaseUsage) quota += `<div class="qrow"><div class="qhead"><span><span class="qprov">Firebase · Weed!</span><br>Zahlen gibt es nur in der Firebase-Konsole</span></div><a href="${esc(acc.firebaseUsage)}" target="_blank" rel="noopener" style="font-size:14px;font-weight:600">Verbrauch in Firebase ansehen</a></div>`;
   const quotaCard = quota ? `<h2 class="sec-title">Gratis-Kontingente</h2><section class="card quota">${quota}</section>` : '';
 
-  const rows = apps.map(a => {
+  const rowHtml = a => {
     const v = a.visits;
     const sub = v ? (v.lastVisit ? `${rel(v.lastVisit)} · heute ${num(v.today)}` : 'noch kein Besuch gezählt') : (a.updatedText ? `Update ${a.updatedText}` : 'läuft');
     const st = [];
@@ -259,7 +259,7 @@ function render(s) {
     if (a.updatedText) st.push(['Letztes Update', a.updatedText]);
     if (peak(v?.hours)) st.push(['Meist genutzt', peak(v.hours)]);
     if (a.muted) st.push(['Meldungen', a.muted === 'aus' ? 'stumm' : 'stumm bis ' + new Date(a.muted).toLocaleDateString('de-DE', { day: 'numeric', month: 'numeric' })]);
-    const ownBars = (a.bars || []).filter(b => b.provider !== 'GitHub' && !(b.provider === 'Cloudflare' && (b.label === 'Aufrufe heute' || b.label.startsWith('Spielräume'))));
+    const ownBars = (a.bars || []).filter(b => b.provider !== 'GitHub' && !b.shared);
     const notes = (a.notes || []).map(n => `<span class="hint" style="color:var(--crit-t)">Fehler: ${esc(n)}</span>`).join('');
     return `<details class="app" data-id="${esc(a.id)}" ${openApps.has(a.id) ? 'open' : ''}>
       <summary>
@@ -280,7 +280,16 @@ function render(s) {
         ${a.url ? `<a class="open-btn" href="${esc(a.url)}" target="_blank" rel="noopener">App öffnen</a>` : ''}
       </div>
     </details>`;
+  };
+  const GROUPS = ['Spiele', 'Lernen', 'Sport & Infos', 'Werkzeuge', 'Sonstiges'];
+  const groups = [...new Set([...GROUPS, ...apps.map(a => a.group || 'Sonstiges')])].map(g => [g, apps.filter(a => (a.group || 'Sonstiges') === g)]).filter(([, l]) => l.length);
+  const appsHtml = groups.map(([g, list]) => {
+    const bad = list.filter(a => a.level === 'warn' || a.level === 'crit').length;
+    const today = list.reduce((n, a) => n + (a.visits?.today || 0), 0);
+    return `<h2 class="sec-title" style="display:flex;justify-content:space-between"><span>${esc(g)} · ${list.length}</span><span style="text-transform:none;letter-spacing:0;font-weight:600">${bad ? `<span style="color:var(--warn-t)">${bad} Hinweis${bad > 1 ? 'e' : ''}</span>` : `${num(today)} Aufrufe heute`}</span></h2>
+      <section class="card apps">${list.map(rowHtml).join('')}</section>`;
   }).join('');
+  const disc = (s.account?.discovered || []).map(d => `<section class="card alert" style="background:var(--soft)"><span class="dot" style="background:var(--accent)"></span><div><b>Neue App entdeckt: ${esc(d.script)}</b><p>Läuft bei Cloudflare, ist aber noch nicht im Monitor. Sag Claude Bescheid, dann wird sie aufgenommen.</p></div></section>`).join('');
 
   const hist = (s.history || []).slice(0, 10).map(h => `<div class="hist"><span class="dot" style="background:${C[h.level]}"></span><span>${esc(h.text)}</span><time>${new Date(h.t).toLocaleString('de-DE', { day:'numeric', month:'numeric', hour:'2-digit', minute:'2-digit' })}</time></div>`).join('');
 
@@ -288,8 +297,8 @@ function render(s) {
     ${stale ? `<div class="error">Der Monitor hat seit über 2 Stunden nicht geprüft. Sag Claude Bescheid.</div>` : ''}
     ${hero}
     ${alerts}
-    <h2 class="sec-title">Apps</h2>
-    <section class="card apps">${rows}</section>
+    ${disc}
+    ${appsHtml}
     ${quotaCard}
     ${hoursChart(s.account?.hours)}
     <h2 class="sec-title">Mehr</h2>

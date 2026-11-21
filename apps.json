@@ -2,6 +2,7 @@
   {
     "id": "weed",
     "name": "Weed!",
+    "group": "Spiele",
     "url": "https://weed-kma.kma-online.workers.dev/",
     "pushCheck": "https://weed-kma.kma-online.workers.dev/api/push",
     "cloudflare": {
@@ -17,33 +18,9 @@
     }
   },
   {
-    "id": "nba",
-    "name": "NBA Aktuell",
-    "url": "https://doktoroege.github.io/nba-aktuell/",
-    "dataJson": "https://doktoroege.github.io/nba-aktuell/data.json",
-    "github": {
-      "repo": "DoktorOege/nba-aktuell"
-    },
-    "visits": {
-      "host": "doktoroege.github.io",
-      "path": "/nba-aktuell/"
-    }
-  },
-  {
-    "id": "container",
-    "name": "Container-Scanner",
-    "url": "https://doktoroege.github.io/container-scanner/",
-    "github": {
-      "repo": "DoktorOege/container-scanner"
-    },
-    "visits": {
-      "host": "doktoroege.github.io",
-      "path": "/container-scanner/"
-    }
-  },
-  {
     "id": "kniffel",
     "name": "Kniffel",
+    "group": "Spiele",
     "url": "https://kniffel.kma-online.workers.dev/",
     "pushCheck": "https://kniffel.kma-online.workers.dev/api/vapid",
     "cloudflare": {
@@ -56,8 +33,39 @@
     }
   },
   {
+    "id": "schiffe",
+    "name": "Schiffe versenken",
+    "group": "Spiele",
+    "url": "https://schiffe-versenken.kma-online.workers.dev/",
+    "pushCheck": "https://schiffe-versenken.kma-online.workers.dev/api/vapid",
+    "cloudflare": {
+      "script": "schiffe-versenken",
+      "durableObjects": true
+    },
+    "visits": {
+      "host": "schiffe-versenken.kma-online.workers.dev",
+      "path": "/"
+    }
+  },
+  {
+    "id": "kreuzquer",
+    "name": "Kreuz & Quer",
+    "group": "Spiele",
+    "url": "https://kreuz-quer.kma-online.workers.dev/",
+    "pushCheck": "https://kreuz-quer.kma-online.workers.dev/api/vapid",
+    "cloudflare": {
+      "script": "kreuz-quer",
+      "durableObjects": true
+    },
+    "visits": {
+      "host": "kreuz-quer.kma-online.workers.dev",
+      "path": "/"
+    }
+  },
+  {
     "id": "einmaleins",
     "name": "1×1 Champion",
+    "group": "Lernen",
     "url": "https://1x1.kma-online.workers.dev/",
     "versionUrl": "https://1x1.kma-online.workers.dev/version.json",
     "cloudflare": {
@@ -74,6 +82,7 @@
   {
     "id": "erdkunde",
     "name": "Erdkunde-Finale",
+    "group": "Lernen",
     "url": "https://erdkunde-finale.kma-online.workers.dev/",
     "cloudflare": {
       "script": "erdkunde-finale"
@@ -81,8 +90,34 @@
     "_hinweis": "Von Hand hochgeladen, kein GitHub-Repo – daher keine Besucherzählung."
   },
   {
+    "id": "nba",
+    "name": "NBA Aktuell",
+    "group": "Sport & Infos",
+    "url": "https://doktoroege.github.io/nba-aktuell/",
+    "dataJson": "https://doktoroege.github.io/nba-aktuell/data.json",
+    "github": {
+      "repo": "DoktorOege/nba-aktuell"
+    },
+    "visits": {
+      "host": "doktoroege.github.io",
+      "path": "/nba-aktuell/"
+    }
+  },
+  {
+    "id": "container",
+    "name": "Container-Scanner",
+    "group": "Werkzeuge",
+    "url": "https://doktoroege.github.io/container-scanner/",
+    "visits": {
+      "host": "doktoroege.github.io",
+      "path": "/container-scanner/"
+    },
+    "_hinweis": "Repo ist privat – Speicherplatz wird nicht mehr abgefragt."
+  },
+  {
     "id": "tvm",
     "name": "Meppen Basketball",
+    "group": "Sport & Infos",
     "url": "",
     "cloudflare": {
       "script": "",

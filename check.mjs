@@ -223,7 +223,7 @@ function whenText(d) {
 
 // ---------- Eine App prüfen ----------
 async function checkApp(cfg, cf, rum, state, dob) {
-  const app = { id: cfg.id, name: cfg.name, url: cfg.url, providers: [], bars: [], facts: [], notes: [], problems: [] };
+  const app = { id: cfg.id, name: cfg.name, group: cfg.group || 'Sonstiges', url: cfg.url, providers: [], bars: [], facts: [], notes: [], problems: [] };
   const note = e => app.notes.push(String(e.message || e));
 
   // erreichbar? + Ladezeit
@@ -254,7 +254,7 @@ async function checkApp(cfg, cf, rum, state, dob) {
     if (cf) {
       const mine = cfg.cloudflare.script ? (cf.byScript[cfg.cloudflare.script] || 0) : null;
       app.cfMine = mine;
-      app.bars.push(bar('Cloudflare', 'Aufrufe heute', cf.total, LIMITS.cfRequests, {
+      app.bars.push(bar('Cloudflare', 'Aufrufe heute', cf.total, LIMITS.cfRequests, { shared: true,
         sub: (mine !== null ? `davon diese App: ${fmt(mine)} · ` : '') + 'Limit gilt für alle Cloudflare-Apps zusammen',
         reset: resetText('UTC')
       }));
@@ -266,10 +266,10 @@ async function checkApp(cfg, cf, rum, state, dob) {
       }
       if (cfg.cloudflare.durableObjects && dob) {
         const reset = resetText('UTC');
-        app.bars.push(bar('Cloudflare', 'Spielräume: Anfragen heute', dob.requests, LIMITS.doRequests, { reset }));
-        if (dob.rowsWritten != null) app.bars.push(bar('Cloudflare', 'Spielräume: gespeichert heute', dob.rowsWritten, LIMITS.doRowsWritten, { reset }));
-        if (dob.rowsRead != null) app.bars.push(bar('Cloudflare', 'Spielräume: gelesen heute', dob.rowsRead, LIMITS.doRowsRead, { reset }));
-        if (dob.gbs != null) app.bars.push(bar('Cloudflare', 'Spielräume: Rechenzeit heute', dob.gbs, LIMITS.doGbs, { reset, text: `${fmt(dob.gbs)} / ${fmt(LIMITS.doGbs)} GB-s` }));
+        app.bars.push(bar('Cloudflare', 'Spielräume (alle Spiele): Anfragen heute', dob.requests, LIMITS.doRequests, { shared: true, reset }));
+        if (dob.rowsWritten != null) app.bars.push(bar('Cloudflare', 'Spielräume (alle Spiele): gespeichert heute', dob.rowsWritten, LIMITS.doRowsWritten, { shared: true, reset }));
+        if (dob.rowsRead != null) app.bars.push(bar('Cloudflare', 'Spielräume (alle Spiele): gelesen heute', dob.rowsRead, LIMITS.doRowsRead, { shared: true, reset }));
+        if (dob.gbs != null) app.bars.push(bar('Cloudflare', 'Spielräume (alle Spiele): Rechenzeit heute', dob.gbs, LIMITS.doGbs, { shared: true, reset, text: `${fmt(dob.gbs)} / ${fmt(LIMITS.doGbs)} GB-s` }));
       }
       if (cfg.cloudflare.kv) {
         app.bars.push(bar('Cloudflare', 'Speicher gelesen heute', cf.kv.read, LIMITS.kvReads, { reset: resetText('UTC') }));
@@ -339,11 +339,11 @@ async function checkApp(cfg, cf, rum, state, dob) {
   }
 
   for (const b of app.bars) {
-    if (b.level === 'ok') continue;
+    if (b.level === 'ok' || b.shared) continue; // gemeinsame Kontingente meldet der Konto-Eintrag
     const full = b.pct >= 100;
     app.problems.push({
       level: b.level, label: full ? 'Voll' : b.level === 'crit' ? 'Fast voll' : 'Wird knapp',
-      text: `${b.label.replace(/^Spielräume: /, 'Spielräume – ')} (${b.provider}): ${b.pct} % vom Gratis-Kontingent. ${b.reset || ''}`.trim(),
+      text: `${b.label.replace(/^Spielräume \(alle Spiele\): /, 'Spielräume aller Spiele – ')} (${b.provider}): ${b.pct} % vom Gratis-Kontingent. ${b.reset || ''}`.trim(),
       todo: full ? 'Die App hakt bis zum Neustart. Melde dich, dann mache ich sie sparsamer.' : 'Nichts tun – nur wenn es öfter passiert, melde dich.'
     });
   }
@@ -393,6 +393,22 @@ for (const cfg of config) {
   } catch (e) { apps.push({ id: cfg.id, name: cfg.name, level: 'off', label: 'Prüfung fehlgeschlagen', text: String(e.message || e), bars: [], facts: [], notes: [], providers: [] }); }
 }
 
+// Gemeinsame Gratis-Kontingente (gelten für alle Apps zusammen) als eigener Eintrag
+{
+  const shared = [];
+  if (cf) shared.push(bar('Cloudflare', 'Aufrufe heute (alle Apps)', cf.total, LIMITS.cfRequests, { reset: resetText('UTC') }));
+  if (dob) {
+    shared.push(bar('Cloudflare', 'Spielräume: Anfragen heute', dob.requests, LIMITS.doRequests, { reset: resetText('UTC') }));
+    if (dob.rowsWritten != null) shared.push(bar('Cloudflare', 'Spielräume: gespeichert heute', dob.rowsWritten, LIMITS.doRowsWritten, { reset: resetText('UTC') }));
+    if (dob.rowsRead != null) shared.push(bar('Cloudflare', 'Spielräume: gelesen heute', dob.rowsRead, LIMITS.doRowsRead, { reset: resetText('UTC') }));
+    if (dob.gbs != null) shared.push(bar('Cloudflare', 'Spielräume: Rechenzeit heute', dob.gbs, LIMITS.doGbs, { reset: resetText('UTC') }));
+  }
+  const top = shared.filter(b => b.level !== 'ok').sort((a, b) => b.pct - a.pct)[0];
+  if (top) apps.push({ id: 'konto', name: 'Gratis-Kontingente', synthetic: true, level: top.level, label: top.pct >= 100 ? 'Voll' : top.level === 'crit' ? 'Fast voll' : 'Wird knapp',
+    text: `${top.label} – ${top.pct} % vom Gratis-Kontingent (gilt für alle Apps zusammen). ${top.reset}`,
+    todo: top.pct >= 100 ? 'Die betroffenen Apps haken bis zum Neustart. Melde dich bei Claude.' : 'Nichts tun – nur wenn es öfter passiert, melde dich.', bars: [], notes: [] });
+}
+
 const hour = partsIn('Europe/Berlin').h;
 const quiet = hour >= QUIET_FROM || hour < QUIET_TO;
 const today = berlinDay();
@@ -434,7 +450,17 @@ if ((isSunday && bp.h >= 19 && state.weeklyDay !== today) || env.TEST_WEEKLY ===
   if (await push('Wochenbericht deiner Apps', lines.join('\n'), 2, ['bar_chart']) && env.TEST_WEEKLY !== 'true') state.weeklyDay = today;
 }
 
+// Neue, noch nicht eingetragene Cloudflare-Apps entdecken
+const allCfg = JSON.parse(await readFile('apps.json', 'utf8'));
+const known = new Set(allCfg.map(a => a.cloudflare?.script).filter(Boolean));
+const discovered = cf ? Object.entries(cf.byScript).filter(([n, c]) => n && n !== '?' && !known.has(n) && c > 0).map(([n, c]) => ({ script: n, url: `https://${n}.kma-online.workers.dev/`, requests: c })) : [];
+state.discoveredTold ||= {};
+for (const d of discovered) {
+  if (!state.discoveredTold[d.script] && await push('Neue App entdeckt', `${d.script} läuft bei Cloudflare, ist aber noch nicht im Monitor. Sag Claude Bescheid, dann wird sie aufgenommen.`, 3, ['sparkles'])) state.discoveredTold[d.script] = today;
+}
+
 const account = {
+  discovered,
   cloudflare: cf ? { requests: cf.total, limit: LIMITS.cfRequests, reset: resetText('UTC') } : null,
   durableObjects: dob ? { requests: dob.requests, rowsWritten: dob.rowsWritten, rowsRead: dob.rowsRead, gbs: dob.gbs,
     limits: { requests: LIMITS.doRequests, rowsWritten: LIMITS.doRowsWritten, rowsRead: LIMITS.doRowsRead, gbs: LIMITS.doGbs } } : null,
